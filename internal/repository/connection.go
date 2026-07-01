@@ -11,7 +11,7 @@ import (
 
 // NewConnect return new connection to DB
 func NewConnect() (*sql.DB, error) {
-	db, err := sql.Open("pgx", config.DBconfig.DBConnStr)
+	db, err := sql.Open("pgx", config.SrvConfig.DBConnStr)
 	if err != nil {
 		logger.Log.Errorln(err)
 	}

@@ -1,4 +1,4 @@
-module goKeeper
+module github.com/mrechkunov/goKeeper.git
 
 go 1.25.4
 
