@@ -3,8 +3,9 @@ package config
 import (
 	"encoding/json"
 	"flag"
-	"goKeeper/internal/logger"
 	"os"
+
+	"github.com/mrechkunov/goKeeper.git/internal/logger"
 )
 
 type DBconfig struct {

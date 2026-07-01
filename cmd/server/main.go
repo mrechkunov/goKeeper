@@ -1,8 +1,9 @@
 package main
 
 import (
-	"goKeeper/internal/config"
-	"goKeeper/internal/logger"
+	"github.com/mrechkunov/goKeeper.git/internal/config"
+	"github.com/mrechkunov/goKeeper.git/internal/logger"
+	"github.com/mrechkunov/goKeeper.git/internal/repository"
 )
 
 func main() {

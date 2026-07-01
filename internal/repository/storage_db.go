@@ -3,7 +3,8 @@ package repository
 import (
 	"database/sql"
 	"errors"
-	"goKeeper/internal/logger"
+
+	"github.com/mrechkunov/goKeeper.git/internal/logger"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"

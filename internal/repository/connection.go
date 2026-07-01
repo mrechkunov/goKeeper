@@ -2,8 +2,9 @@ package repository
 
 import (
 	"database/sql"
-	"goKeeper/internal/config"
-	"goKeeper/internal/logger"
+
+	"github.com/mrechkunov/goKeeper.git/internal/config"
+	"github.com/mrechkunov/goKeeper.git/internal/logger"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 )

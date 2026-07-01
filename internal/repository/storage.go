@@ -1,6 +1,6 @@
 package repository
 
-import "goKeeper/internal/logger"
+import "github.com/mrechkunov/goKeeper.git/internal/logger"
 
 type StorageI interface {
 	GetData(shortURL string) (string, bool)
