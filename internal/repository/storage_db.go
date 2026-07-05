@@ -15,7 +15,7 @@ type DB struct {
 	dbconn *sql.DB
 }
 
-// NewDB set new connection to DB from config, applying all migrations, set counter of rows
+// NewDB set new connection to DB from config, applying all migrations
 func NewDB() *DB {
 	var db DB
 	var err error
