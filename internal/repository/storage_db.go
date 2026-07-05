@@ -12,13 +12,14 @@ import (
 )
 
 type DB struct {
-	dbconn  *sql.DB
-	counter int
+	dbconn *sql.DB
 }
 
 // NewDB set new connection to DB from config, applying all migrations, set counter of rows
 func NewDB() *DB {
-	db, err := NewConnect()
+	var db DB
+	var err error
+	db.dbconn, err = NewConnect()
 	if err != nil {
 		logger.Log.Errorln("error while db connection")
 	}
@@ -35,18 +36,8 @@ func NewDB() *DB {
 		logger.Log.Fatalln("Error applying migrations:", err)
 	}
 	logger.Log.Infoln("Database migrations applied successfully!")
-	db.Ping()
-
-	// set DB struct (counter uuid & db conn)
-	var cnt int
-	_ = db.QueryRow("SELECT count FROM storage ORDER BY count DESC LIMIT 1").Scan(
-		&cnt)
-	cnt++
-	var retDB = &DB{
-		dbconn:  db,
-		counter: cnt,
-	}
-	return retDB
+	db.dbconn.Ping()
+	return &db
 }
 
 // Close DB connection

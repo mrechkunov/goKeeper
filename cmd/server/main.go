@@ -8,9 +8,9 @@ import (
 
 func main() {
 	config.Init()
+	logger.Log.Infoln("Reading config")
 	Storage := repository.NewDB()
 	defer Storage.Close()
 	defer logger.Log.Sync() // закрываем логгер при выходе из main
-	logger.Log.Infoln("Reading config")
 
 }

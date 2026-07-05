@@ -1,6 +1,6 @@
 {
-    "migrations_path": "",
-    "database_dsn": "postgres://yapra:yaprapass@10.254.40.123:5432/yandexpracticum?sslmode=disable",
+    "migrations_path": "file://migrations",
+    "database_dsn": "postgres://gokeeper:gokeeper_pass@10.254.40.123:5432/gokeeper_db?sslmode=disable",
     "grpc_server_address": "localhost:50010"
 }
 
