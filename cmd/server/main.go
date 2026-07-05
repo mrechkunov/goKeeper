@@ -9,7 +9,7 @@ import (
 func main() {
 	config.Init()
 	logger.Log.Infoln("Reading config")
-	Storage := repository.NewDB()
+	Storage := repository.NewUsersStorage(config.DBconn)
 	defer Storage.Close()
 	defer logger.Log.Sync() // закрываем логгер при выходе из main
 
