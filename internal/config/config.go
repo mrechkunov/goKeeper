@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 )
 
