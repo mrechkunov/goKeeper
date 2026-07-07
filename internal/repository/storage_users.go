@@ -25,6 +25,15 @@ func (su *StorageUsers) Close() error {
 	return su.DBconnection.Close()
 }
 
+// is user exist in db ?
+func (su *StorageUsers) IsExist(ctx context.Context, login string) bool {
+	data, err := su.ReadUser(ctx, login)
+	if data.Login == login && err == nil {
+		return true
+	}
+	return false
+}
+
 // добавить пользователя C
 func (su *StorageUsers) CreateUser(ctx context.Context, user model.Users) error {
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, 3*time.Second)
@@ -79,8 +88,14 @@ func (su *StorageUsers) DeleteUser(ctx context.Context, user model.Users) error 
 		logger.Log.Errorln("error while delete user in DB", err)
 		return err
 	}
+
+	//TODO: make sync group and run in gorutines
 	PassStorage := NewPasswordsStorage(su.DBconnection)
 	PassStorage.DeleteDataByToken(ctxWithTimeout, user.Token)
 	PassStorage.Close()
+
+	//TODO: delete in cards tapbe
+	//TODO: delete in binary file table
+
 	return nil
 }

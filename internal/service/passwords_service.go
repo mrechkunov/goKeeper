@@ -1,10 +1,10 @@
 package service
 
-// TODO: register user
-// TODO: authentification user (login + pass check, responce token)
-// TODO: autorization user (token check)
-// TODO: edit user (change password for autorizated user)
-// TODO: delete user (delete user and all data in torages)
+// TODO: read record (token + metadata)
+// TODO: insert recors (model.password)
+// TODO: edit record (model.password)
+// TODO: delete record (token + metadata)
+// TODO: delete records (token)
 
 // func GetUserByLogin(ctx context.Context, login string) model.Users {
 // 	storageUsers := repository.NewUsersStorage(config.DBconn)
