@@ -79,6 +79,8 @@ func (su *StorageUsers) DeleteUser(ctx context.Context, user model.Users) error 
 		logger.Log.Errorln("error while delete user in DB", err)
 		return err
 	}
-	//TODO: вызвать функцию удаления данных в таблицах паролей, карт, бинарников в 3-х горутиранх с контекстом
+	PassStorage := NewPasswordsStorage(su.DBconnection)
+	PassStorage.DeleteDataByToken(ctxWithTimeout, user.Token)
+	PassStorage.Close()
 	return nil
 }
