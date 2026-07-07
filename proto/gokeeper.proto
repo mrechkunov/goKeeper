@@ -1,0 +1,22 @@
+edition = "2023";
+
+package mrechkunov.goKeeper.proto;
+
+option go_package = "github.com/mrechkunov/goKeeper.git/proto"; 
+
+service GoKeeper {
+  rpc RegisterUser (User) returns (StatusResponce);
+  rpc AuthenticateUser (User) returns (StatusResponce); // + token in MD
+  rpc EditUser (User) returns (StatusResponce); // change password
+  rpc DeleteUser (User) returns (StatusResponce);
+}
+
+message User {
+    string login = 1;
+    string password = 2;
+    string token = 3;
+}
+
+message StatusResponce {
+    string result = 1;
+}

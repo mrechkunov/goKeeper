@@ -1,8 +1,9 @@
 package service
 
+// TODO: autorization user (token check) extend
+
 // TODO: register user
 // TODO: authentification user (login + pass check, responce token)
-// TODO: autorization user (token check)
 // TODO: edit user (change password for autorizated user)
 // TODO: delete user (delete user and all data in torages)
 
