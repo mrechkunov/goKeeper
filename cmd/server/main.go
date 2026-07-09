@@ -22,7 +22,8 @@ func main() {
 	// Создаем контекст для получения системных сигналов
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	defer stop()
-	// Нужно определить адрес для сервера из конфига
+
+	// Нужно определить порт для сервера из конфига
 	listen, err := net.Listen("tcp", config.SrvConfig.GRPCServerAddress)
 	if err != nil {
 		logger.Log.Warnln("Error while listener initialization: ", err)
@@ -45,6 +46,9 @@ func main() {
 			os.Exit(1)
 		}
 	}()
+
 	<-ctx.Done()
+	logger.Log.Infoln("Получен сигнал завершения. Начинаем graceful shutdown...")
 	s.GracefulStop()
+
 }
