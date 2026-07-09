@@ -20,23 +20,27 @@ func NewUsersStorage(DBconn *sql.DB) StorageUsers {
 	return StorageUsers{DBconnection: DBconn}
 }
 
-// Close DB connection
-func (su *StorageUsers) Close() error {
-	return su.DBconnection.Close()
-}
-
 // is user exist in db ?
-func (su *StorageUsers) IsExist(ctx context.Context, login string) bool {
-	data, err := su.ReadUser(ctx, login)
-	if data.Login == login && err == nil {
-		return true
+func (su *StorageUsers) IsExist(ctx context.Context, login string) (bool, error) {
+	var user model.Users
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
+	defer cancel()
+	sqlStatement := `SELECT u_login, u_password, u_token FROM users WHERE u_login = $1;`
+	err := su.DBconnection.QueryRowContext(ctxWithTimeout, sqlStatement, login).Scan(&user.Login, &user.Password, &user.Token)
+	if err != nil && err != sql.ErrNoRows {
+		logger.Log.Errorln("Error while try isExist user: ", err)
+		return false, err
 	}
-	return false
+	if err == sql.ErrNoRows {
+		logger.Log.Infoln("user with login: ", login, "is not exist in DB")
+		return false, nil
+	}
+	return true, nil
 }
 
 // добавить пользователя C
 func (su *StorageUsers) CreateUser(ctx context.Context, user model.Users) error {
-	ctxWithTimeout, cancel := context.WithTimeout(ctx, 3*time.Second)
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
 	defer cancel()
 	sqlStatement := `INSERT INTO users (u_login, u_password, u_token) 
 				VALUES ($1, $2, $3)`
@@ -52,15 +56,15 @@ func (su *StorageUsers) CreateUser(ctx context.Context, user model.Users) error 
 func (su *StorageUsers) ReadUser(ctx context.Context, login string) (user model.Users, err error) {
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
+	exist, err := su.IsExist(ctxWithTimeout, login)
+	if err != nil {
+		logger.Log.Errorln("Error while read user", err)
+	}
+	if !exist {
+		return user, err
+	}
 	sqlStatement := `SELECT u_login, u_password, u_token FROM users WHERE u_login = $1;`
 	err = su.DBconnection.QueryRowContext(ctxWithTimeout, sqlStatement, login).Scan(&user.Login, &user.Password, &user.Token)
-	if err == sql.ErrNoRows {
-		logger.Log.Infoln("user with login: ", login, "is not exist in DB")
-		return user, err
-	}
-	if err != nil {
-		return user, err
-	}
 	return user, nil
 }
 
@@ -82,7 +86,7 @@ func (su *StorageUsers) UpdateUser(ctx context.Context, user model.Users) error 
 
 // удалить пользователя и все его данные D
 func (su *StorageUsers) DeleteUser(ctx context.Context, user model.Users) error {
-	ctxWithTimeout, cancel := context.WithTimeout(ctx, 10*time.Second)
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 	sqlStatement := `DELETE FROM users
 				WHERE u_login = $1;`
@@ -97,7 +101,7 @@ func (su *StorageUsers) DeleteUser(ctx context.Context, user model.Users) error 
 	PassStorage.DeleteDataByToken(ctxWithTimeout, user.Token)
 	PassStorage.Close()
 
-	//TODO: delete in cards tapbe
+	//TODO: delete in cards table
 	//TODO: delete in binary file table
 
 	return nil

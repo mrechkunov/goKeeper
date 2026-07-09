@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	"github.com/mrechkunov/goKeeper.git/internal/model"
@@ -19,16 +18,16 @@ func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *p
 		Password: in.GetPassword(),
 		Token:    in.GetToken(),
 	}
-	fmt.Println(user)
 	err = InsertUser(ctx, user)
 	if err != nil {
-		logger.Log.Warnln("Error while insert user:", err)
-		return out, nil
+		logger.Log.Infoln("Error while insert user:", err)
+		return out, err
 	}
 	result := "OK"
 	out = pb.StatusResponce_builder{
 		Result: &result,
 	}.Build()
+
 	return out, nil
 }
 

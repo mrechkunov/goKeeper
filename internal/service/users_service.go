@@ -12,15 +12,15 @@ import (
 
 // Insert NEW user in DB if login is not exist
 func InsertUser(ctx context.Context, user model.Users) error {
-	storage := repository.NewUsersStorage(config.DBconn)
-	defer storage.Close()
-	if storage.IsExist(ctx, user.Login) {
+	usersStorage := repository.NewUsersStorage(config.DBconn)
+	exist, err := usersStorage.IsExist(ctx, user.Login)
+	if err != nil || exist {
 		err := status.Error(codes.AlreadyExists, "User already exist")
 		return err
 	} else {
-		storage.CreateUser(ctx, user)
+		usersStorage.CreateUser(ctx, user)
+		return nil
 	}
-	return nil
 }
 
 // TODO: autorization user (token check) extend
@@ -28,30 +28,3 @@ func InsertUser(ctx context.Context, user model.Users) error {
 // TODO: authentification user (login + pass check, responce token)
 // TODO: edit user (change password for autorizated user)
 // TODO: delete user (delete user and all data in torages)
-
-// func GetUserByLogin(ctx context.Context, login string) model.Users {
-// 	storageUsers := repository.NewUsersStorage(config.DBconn)
-// 	return storageUsers.GetUserByLogin(ctx, token)
-// }
-
-// func GetUserByLogin(ctx context.Context, login string) model.Users {
-// 	storageUsers := repository.NewUsersStorage(config.DBconn)
-// 	return storageUsers.GetUserByLogin(ctx, login)
-// }
-
-// func UpdateUser(ctx context.Context, user *model.Users) error {
-// 	storageUsers := repository.NewUsersStorage(config.DBconn)
-// 	return storageUsers.UpdateUser(ctx, *user)
-// }
-
-// func InsertNewUser(ctx context.Context, user *model.Users) error {
-// 	storageUsers := repository.NewUsersStorage(config.DBconn)
-// 	if storageUsers.InsertUser(ctx, *user) != nil {
-// 		return storageUsers.InsertUser(ctx, *user)
-// 	}
-// 	storageBalance := repository.NewBalanceStorage(config.DBconn)
-// 	if storageBalance.AddUserBalance(ctx, user.Login) != nil {
-// 		return storageBalance.AddUserBalance(ctx, user.Login)
-// 	}
-// 	return nil
-// }

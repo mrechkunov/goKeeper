@@ -19,6 +19,7 @@ func main() {
 	config.Init()
 	logger.Log.Infoln("Reading config")
 	defer logger.Log.Sync() // закрываем логгер при выходе из main
+
 	// Создаем контекст для получения системных сигналов
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	defer stop()
@@ -50,5 +51,4 @@ func main() {
 	<-ctx.Done()
 	logger.Log.Infoln("Получен сигнал завершения. Начинаем graceful shutdown...")
 	s.GracefulStop()
-
 }
