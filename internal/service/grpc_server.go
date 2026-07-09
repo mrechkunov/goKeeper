@@ -1,11 +1,30 @@
 package service
 
 import (
+	"context"
+
+	"github.com/mrechkunov/goKeeper.git/internal/logger"
+	"github.com/mrechkunov/goKeeper.git/internal/model"
 	pb "github.com/mrechkunov/goKeeper.git/proto"
 )
 
 type GoKeeperServer struct {
 	pb.UnimplementedGoKeeperServer
+}
+
+func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *pb.StatusResponce, err error) {
+	user := model.Users{
+		Login:    in.GetLogin(),
+		Password: in.GetPassword(),
+		Token:    in.GetToken(),
+	}
+	err = InsertUser(ctx, user)
+	if err != nil {
+		logger.Log.Warnln("Error while insert user:", err)
+		return
+	}
+	out.SetResult("OK")
+	return
 }
 
 // // ListUserURLs return to user all urls where user is creator
