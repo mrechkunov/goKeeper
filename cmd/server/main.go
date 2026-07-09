@@ -1,9 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"net"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/mrechkunov/goKeeper.git/internal/config"
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
@@ -17,8 +19,9 @@ func main() {
 	config.Init()
 	logger.Log.Infoln("Reading config")
 	defer logger.Log.Sync() // закрываем логгер при выходе из main
-	// Storage := repository.NewUsersStorage(config.DBconn)
-	// defer Storage.Close()
+	// Создаем контекст для получения системных сигналов
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	defer stop()
 
 	// Нужно определить порт для сервера из конфига
 	listen, err := net.Listen("tcp", config.SrvConfig.GRPCServerAddress)
@@ -35,13 +38,17 @@ func main() {
 	s := grpc.NewServer(grpc.Creds(creds))
 	// Регистрируем сервис
 	pb.RegisterGoKeeperServer(s, &service.GoKeeperServer{})
-	fmt.Println("сервер gRPC начал работу")
-	// Получение запроса gRpc
+	logger.Log.Infoln("сервер gRPC начал работу")
+	// Ожидание получение запроса gRpc
 	go func() {
 		if err := s.Serve(listen); err != nil {
 			logger.Log.Warnln("ошибка при работе сервера", "error", err)
 			os.Exit(1)
 		}
 	}()
+
+	<-ctx.Done()
+	logger.Log.Infoln("Получен сигнал завершения. Начинаем graceful shutdown...")
+	s.GracefulStop()
 
 }
