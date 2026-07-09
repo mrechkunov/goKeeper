@@ -1,8 +1,11 @@
 package main
 
 import (
+	"context"
 	"net"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/mrechkunov/goKeeper.git/internal/config"
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
@@ -16,7 +19,9 @@ func main() {
 	config.Init()
 	logger.Log.Infoln("Reading config")
 	defer logger.Log.Sync() // закрываем логгер при выходе из main
-
+	// Создаем контекст для получения системных сигналов
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	defer stop()
 	// Нужно определить адрес для сервера из конфига
 	listen, err := net.Listen("tcp", config.SrvConfig.GRPCServerAddress)
 	if err != nil {
@@ -40,5 +45,6 @@ func main() {
 			os.Exit(1)
 		}
 	}()
-
+	<-ctx.Done()
+	s.GracefulStop()
 }

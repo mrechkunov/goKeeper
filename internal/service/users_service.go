@@ -17,8 +17,9 @@ func InsertUser(ctx context.Context, user model.Users) error {
 	if storage.IsExist(ctx, user.Login) {
 		err := status.Error(codes.AlreadyExists, "User already exist")
 		return err
+	} else {
+		storage.CreateUser(ctx, user)
 	}
-	storage.CreateUser(ctx, user)
 	return nil
 }
 

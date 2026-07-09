@@ -58,6 +58,9 @@ func (su *StorageUsers) ReadUser(ctx context.Context, login string) (user model.
 		logger.Log.Infoln("user with login: ", login, "is not exist in DB")
 		return user, err
 	}
+	if err != nil {
+		return user, err
+	}
 	return user, nil
 }
 
