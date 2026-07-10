@@ -51,4 +51,5 @@ func main() {
 	<-ctx.Done()
 	logger.Log.Infoln("Получен сигнал завершения. Начинаем graceful shutdown...")
 	s.GracefulStop()
+	config.DBconn.Close()
 }
