@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	pb "github.com/mrechkunov/goKeeper.git/proto"
@@ -32,16 +33,15 @@ func main() {
 	defer conn.Close()
 
 	// 3. Создаем клиента для сервиса
-	//	client := pb.NewYourServiceClient(conn)
 	client := pb.NewGoKeeperClient(conn)
 	// 4. Делаем запрос к серверу
-	//ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	//defer cancel()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	var user pb.User
 	user.SetLogin("ivan")
-	user.SetPassword("test")
-	resp, err := client.RegisterUser(context.Background(), &user)
+	user.SetPasswordHash("test")
+	resp, err := client.RegisterUser(ctx, &user)
 	if err != nil {
 		logger.Log.Errorln("error while register user: ", err)
 	}

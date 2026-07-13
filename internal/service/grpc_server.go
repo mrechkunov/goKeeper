@@ -15,9 +15,9 @@ type GoKeeperServer struct {
 
 func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *pb.StatusResponce, err error) {
 	user := model.Users{
-		Login:    in.GetLogin(),
-		Password: in.GetPassword(),
-		Token:    in.GetToken(),
+		Login:        in.GetLogin(),
+		PasswordHash: in.GetPasswordHash(),
+		Uuid:         in.GetUuid(),
 	}
 	fmt.Println(user)
 	err = InsertUser(ctx, user)

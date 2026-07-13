@@ -31,8 +31,8 @@ func (sp *StoragePasswords) isExist(ctx context.Context, data model.Passwords) b
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
 	var resp model.Passwords
-	sqlStatement := `SELECT p_token, p_pair, p_metadata FROM passwords WHERE p_metadata = $1 AND p_token = $2;`
-	err := sp.DBconnection.QueryRowContext(ctxWithTimeout, sqlStatement, data.Metadata, data.Token).Scan(&resp.Token, &resp.Pair, &resp.Metadata)
+	sqlStatement := `SELECT p_uuid, p_pair, p_metadata FROM passwords WHERE p_metadata = $1 AND p_token = $2;`
+	err := sp.DBconnection.QueryRowContext(ctxWithTimeout, sqlStatement, data.Metadata, data.Uuid).Scan(&resp.Uuid, &resp.Pair, &resp.Metadata)
 	if err == sql.ErrNoRows {
 		logger.Log.Infoln("passwords is not exist in DB")
 		return false
@@ -49,9 +49,9 @@ func (sp *StoragePasswords) InsertData(ctx context.Context, data model.Passwords
 		logger.Log.Infoln("data is already exists in DB")
 		return err
 	}
-	sqlStatement := `INSERT INTO passwords (p_token, p_pair, p_metadata) 
+	sqlStatement := `INSERT INTO passwords (p_uuid, p_pair, p_metadata) 
 				VALUES ($1, $2, $3)`
-	_, err := sp.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, data.Token, data.Pair, data.Metadata)
+	_, err := sp.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, data.Uuid, data.Pair, data.Metadata)
 	if err != nil {
 		logger.Log.Errorln("error while insert passwords to DB", err)
 		return err
@@ -60,11 +60,11 @@ func (sp *StoragePasswords) InsertData(ctx context.Context, data model.Passwords
 }
 
 // вернуть данные если корректный token и metadata R
-func (sp *StoragePasswords) GetData(ctx context.Context, token string, metadata string) (resp model.Passwords, err error) {
+func (sp *StoragePasswords) GetData(ctx context.Context, uuid string, metadata string) (resp model.Passwords, err error) {
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
-	sqlStatement := `SELECT p_token, p_pair, p_metadata FROM passwords WHERE p_token = $1 AND p_metadata = $2;`
-	err = sp.DBconnection.QueryRowContext(ctxWithTimeout, sqlStatement, token, metadata).Scan(&resp.Token, &resp.Pair, &resp.Metadata)
+	sqlStatement := `SELECT p_uuid, p_pair, p_metadata FROM passwords WHERE p_token = $1 AND p_metadata = $2;`
+	err = sp.DBconnection.QueryRowContext(ctxWithTimeout, sqlStatement, uuid, metadata).Scan(&resp.Uuid, &resp.Pair, &resp.Metadata)
 	if err == sql.ErrNoRows {
 		logger.Log.Infoln("passwords is not exist in DB")
 		return resp, err
@@ -83,8 +83,8 @@ func (sp *StoragePasswords) UpdateData(ctx context.Context, data model.Passwords
 	}
 	sqlStatement := `UPDATE passwords 
 					SET p_pair = $1,
-					WHERE p_token = $2 AND p_metadata = $3;`
-	_, err := sp.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, data.Pair, data.Token, data.Metadata)
+					WHERE p_uuid = $2 AND p_metadata = $3;`
+	_, err := sp.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, data.Pair, data.Uuid, data.Metadata)
 	if err != nil {
 		logger.Log.Errorln("error while update passwords to DB", err)
 		return err
@@ -102,8 +102,8 @@ func (sp *StoragePasswords) DeleteData(ctx context.Context, data model.Passwords
 		return err
 	}
 	sqlStatement := `DELETE FROM passwords 
-					WHERE p_token = $1 AND p_metadata = $2;`
-	_, err := sp.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, data.Token, data.Metadata)
+					WHERE p_uuid = $1 AND p_metadata = $2;`
+	_, err := sp.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, data.Uuid, data.Metadata)
 	if err != nil {
 		logger.Log.Errorln("error while delete passwords to DB", err)
 		return err
@@ -112,14 +112,14 @@ func (sp *StoragePasswords) DeleteData(ctx context.Context, data model.Passwords
 }
 
 // удалить все сохраненные пароли пользователя
-func (sp *StoragePasswords) DeleteDataByToken(ctx context.Context, token string) error {
+func (sp *StoragePasswords) DeleteDataByToken(ctx context.Context, uuid string) error {
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 	sqlStatement := `DELETE FROM passwords 
-					WHERE p_token = $1;`
-	_, err := sp.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, token)
+					WHERE p_uuid = $1;`
+	_, err := sp.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, uuid)
 	if err != nil {
-		logger.Log.Errorln("error while delete passwords to DB for user: ", token, err)
+		logger.Log.Errorln("error while delete passwords to DB for user: ", uuid, err)
 		return err
 	}
 	return nil

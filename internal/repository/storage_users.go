@@ -38,9 +38,9 @@ func (su *StorageUsers) IsExist(ctx context.Context, login string) bool {
 func (su *StorageUsers) CreateUser(ctx context.Context, user model.Users) error {
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
-	sqlStatement := `INSERT INTO users (u_login, u_password, u_token) 
+	sqlStatement := `INSERT INTO users (u_login, u_password_hash, u_uuid) 
 				VALUES ($1, $2, $3)`
-	_, err := su.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, user.Login, user.Password, user.Token)
+	_, err := su.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, user.Login, user.PasswordHash, user.Uuid)
 	if err != nil {
 		logger.Log.Errorln("error while insert user to DB", err)
 		return err
@@ -52,8 +52,8 @@ func (su *StorageUsers) CreateUser(ctx context.Context, user model.Users) error 
 func (su *StorageUsers) ReadUser(ctx context.Context, login string) (user model.Users, err error) {
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
-	sqlStatement := `SELECT u_login, u_password, u_token FROM users WHERE u_login = $1;`
-	err = su.DBconnection.QueryRowContext(ctxWithTimeout, sqlStatement, login).Scan(&user.Login, &user.Password, &user.Token)
+	sqlStatement := `SELECT u_login, u_password_hash, u_uuid FROM users WHERE u_login = $1;`
+	err = su.DBconnection.QueryRowContext(ctxWithTimeout, sqlStatement, login).Scan(&user.Login, &user.PasswordHash, &user.Uuid)
 	if err == sql.ErrNoRows {
 		logger.Log.Infoln("user with login: ", login, "is not exist in DB")
 		return user, err
@@ -69,10 +69,10 @@ func (su *StorageUsers) UpdateUser(ctx context.Context, user model.Users) error 
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 	sqlStatement := `UPDATE users 
-				SET u_password = $1, 
-				u_token = $2
+				SET u_password_hash = $1, 
+				u_uuid = $2
 				WHERE u_login = $3;`
-	_, err := su.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, user.Password, user.Token, user.Login)
+	_, err := su.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, user.PasswordHash, user.Uuid, user.Login)
 	if err != nil {
 		logger.Log.Errorln("error while update user data in DB", err)
 		return err
@@ -94,7 +94,7 @@ func (su *StorageUsers) DeleteUser(ctx context.Context, user model.Users) error 
 
 	//TODO: make sync group and run in gorutines
 	PassStorage := NewPasswordsStorage(su.DBconnection)
-	PassStorage.DeleteDataByToken(ctxWithTimeout, user.Token)
+	PassStorage.DeleteDataByToken(ctxWithTimeout, user.Uuid)
 	PassStorage.Close()
 
 	//TODO: delete in cards tapbe

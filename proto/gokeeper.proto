@@ -13,8 +13,8 @@ service GoKeeper {
 
 message User {
     string login = 1;
-    string password = 2;
-    string token = 3;
+    string passwordHash = 2;
+    string uuid = 3;
 }
 
 message StatusResponce {
