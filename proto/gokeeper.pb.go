@@ -23,8 +23,8 @@ const (
 type User struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Login       *string                `protobuf:"bytes,1,opt,name=login"`
-	xxx_hidden_Password    *string                `protobuf:"bytes,2,opt,name=password"`
-	xxx_hidden_Token       *string                `protobuf:"bytes,3,opt,name=token"`
+	xxx_hidden_PassworHash *string                `protobuf:"bytes,2,opt,name=passworHash"`
+	xxx_hidden_Uuid        *string                `protobuf:"bytes,3,opt,name=uuid"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -66,20 +66,20 @@ func (x *User) GetLogin() string {
 	return ""
 }
 
-func (x *User) GetPassword() string {
+func (x *User) GetPassworHash() string {
 	if x != nil {
-		if x.xxx_hidden_Password != nil {
-			return *x.xxx_hidden_Password
+		if x.xxx_hidden_PassworHash != nil {
+			return *x.xxx_hidden_PassworHash
 		}
 		return ""
 	}
 	return ""
 }
 
-func (x *User) GetToken() string {
+func (x *User) GetUuid() string {
 	if x != nil {
-		if x.xxx_hidden_Token != nil {
-			return *x.xxx_hidden_Token
+		if x.xxx_hidden_Uuid != nil {
+			return *x.xxx_hidden_Uuid
 		}
 		return ""
 	}
@@ -91,13 +91,13 @@ func (x *User) SetLogin(v string) {
 	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 3)
 }
 
-func (x *User) SetPassword(v string) {
-	x.xxx_hidden_Password = &v
+func (x *User) SetPassworHash(v string) {
+	x.xxx_hidden_PassworHash = &v
 	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 3)
 }
 
-func (x *User) SetToken(v string) {
-	x.xxx_hidden_Token = &v
+func (x *User) SetUuid(v string) {
+	x.xxx_hidden_Uuid = &v
 	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 3)
 }
 
@@ -108,14 +108,14 @@ func (x *User) HasLogin() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
 }
 
-func (x *User) HasPassword() bool {
+func (x *User) HasPassworHash() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 1)
 }
 
-func (x *User) HasToken() bool {
+func (x *User) HasUuid() bool {
 	if x == nil {
 		return false
 	}
@@ -127,22 +127,22 @@ func (x *User) ClearLogin() {
 	x.xxx_hidden_Login = nil
 }
 
-func (x *User) ClearPassword() {
+func (x *User) ClearPassworHash() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 1)
-	x.xxx_hidden_Password = nil
+	x.xxx_hidden_PassworHash = nil
 }
 
-func (x *User) ClearToken() {
+func (x *User) ClearUuid() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 2)
-	x.xxx_hidden_Token = nil
+	x.xxx_hidden_Uuid = nil
 }
 
 type User_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	Login    *string
-	Password *string
-	Token    *string
+	Login       *string
+	PassworHash *string
+	Uuid        *string
 }
 
 func (b0 User_builder) Build() *User {
@@ -153,13 +153,13 @@ func (b0 User_builder) Build() *User {
 		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 3)
 		x.xxx_hidden_Login = b.Login
 	}
-	if b.Password != nil {
+	if b.PassworHash != nil {
 		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 3)
-		x.xxx_hidden_Password = b.Password
+		x.xxx_hidden_PassworHash = b.PassworHash
 	}
-	if b.Token != nil {
+	if b.Uuid != nil {
 		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 3)
-		x.xxx_hidden_Token = b.Token
+		x.xxx_hidden_Uuid = b.Uuid
 	}
 	return m0
 }
@@ -246,16 +246,17 @@ var File_gokeeper_proto protoreflect.FileDescriptor
 
 const file_gokeeper_proto_rawDesc = "" +
 	"\n" +
-	"\x0egokeeper.proto\x12\x19mrechkunov.goKeeper.proto\"N\n" +
+	"\x0egokeeper.proto\x12\x19mrechkunov.goKeeper.proto\"R\n" +
 	"\x04User\x12\x14\n" +
-	"\x05login\x18\x01 \x01(\tR\x05login\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x14\n" +
-	"\x05token\x18\x03 \x01(\tR\x05token\"(\n" +
+	"\x05login\x18\x01 \x01(\tR\x05login\x12 \n" +
+	"\vpassworHash\x18\x02 \x01(\tR\vpassworHash\x12\x12\n" +
+	"\x04uuid\x18\x03 \x01(\tR\x04uuid\"(\n" +
 	"\x0eStatusResponce\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\tR\x06result2\xf8\x02\n" +
+	"\x06result\x18\x01 \x01(\tR\x06result2\xc3\x03\n" +
 	"\bGoKeeper\x12Z\n" +
-	"\fRegisterUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a).mrechkunov.goKeeper.proto.StatusResponce\x12^\n" +
-	"\x10AuthenticateUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a).mrechkunov.goKeeper.proto.StatusResponce\x12V\n" +
+	"\fRegisterUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a).mrechkunov.goKeeper.proto.StatusResponce\x12T\n" +
+	"\x10AuthenticateUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a\x1f.mrechkunov.goKeeper.proto.User\x12S\n" +
+	"\x0fAuthorizateUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a\x1f.mrechkunov.goKeeper.proto.User\x12V\n" +
 	"\bEditUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a).mrechkunov.goKeeper.proto.StatusResponce\x12X\n" +
 	"\n" +
 	"DeleteUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a).mrechkunov.goKeeper.proto.StatusResponceB*Z(github.com/mrechkunov/goKeeper.git/protob\beditionsp\xe8\a"
@@ -268,14 +269,16 @@ var file_gokeeper_proto_goTypes = []any{
 var file_gokeeper_proto_depIdxs = []int32{
 	0, // 0: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:input_type -> mrechkunov.goKeeper.proto.User
 	0, // 1: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:input_type -> mrechkunov.goKeeper.proto.User
-	0, // 2: mrechkunov.goKeeper.proto.GoKeeper.EditUser:input_type -> mrechkunov.goKeeper.proto.User
-	0, // 3: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:input_type -> mrechkunov.goKeeper.proto.User
-	1, // 4: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:output_type -> mrechkunov.goKeeper.proto.StatusResponce
-	1, // 5: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:output_type -> mrechkunov.goKeeper.proto.StatusResponce
-	1, // 6: mrechkunov.goKeeper.proto.GoKeeper.EditUser:output_type -> mrechkunov.goKeeper.proto.StatusResponce
-	1, // 7: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:output_type -> mrechkunov.goKeeper.proto.StatusResponce
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	0, // 2: mrechkunov.goKeeper.proto.GoKeeper.AuthorizateUser:input_type -> mrechkunov.goKeeper.proto.User
+	0, // 3: mrechkunov.goKeeper.proto.GoKeeper.EditUser:input_type -> mrechkunov.goKeeper.proto.User
+	0, // 4: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:input_type -> mrechkunov.goKeeper.proto.User
+	1, // 5: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:output_type -> mrechkunov.goKeeper.proto.StatusResponce
+	0, // 6: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:output_type -> mrechkunov.goKeeper.proto.User
+	0, // 7: mrechkunov.goKeeper.proto.GoKeeper.AuthorizateUser:output_type -> mrechkunov.goKeeper.proto.User
+	1, // 8: mrechkunov.goKeeper.proto.GoKeeper.EditUser:output_type -> mrechkunov.goKeeper.proto.StatusResponce
+	1, // 9: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:output_type -> mrechkunov.goKeeper.proto.StatusResponce
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

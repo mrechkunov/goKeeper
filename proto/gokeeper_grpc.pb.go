@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	GoKeeper_RegisterUser_FullMethodName     = "/mrechkunov.goKeeper.proto.GoKeeper/RegisterUser"
 	GoKeeper_AuthenticateUser_FullMethodName = "/mrechkunov.goKeeper.proto.GoKeeper/AuthenticateUser"
+	GoKeeper_AuthorizateUser_FullMethodName  = "/mrechkunov.goKeeper.proto.GoKeeper/AuthorizateUser"
 	GoKeeper_EditUser_FullMethodName         = "/mrechkunov.goKeeper.proto.GoKeeper/EditUser"
 	GoKeeper_DeleteUser_FullMethodName       = "/mrechkunov.goKeeper.proto.GoKeeper/DeleteUser"
 )
@@ -30,7 +31,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GoKeeperClient interface {
 	RegisterUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*StatusResponce, error)
-	AuthenticateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*StatusResponce, error)
+	AuthenticateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
+	AuthorizateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
 	EditUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*StatusResponce, error)
 	DeleteUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*StatusResponce, error)
 }
@@ -53,10 +55,20 @@ func (c *goKeeperClient) RegisterUser(ctx context.Context, in *User, opts ...grp
 	return out, nil
 }
 
-func (c *goKeeperClient) AuthenticateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*StatusResponce, error) {
+func (c *goKeeperClient) AuthenticateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(StatusResponce)
+	out := new(User)
 	err := c.cc.Invoke(ctx, GoKeeper_AuthenticateUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goKeeperClient) AuthorizateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, GoKeeper_AuthorizateUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +100,8 @@ func (c *goKeeperClient) DeleteUser(ctx context.Context, in *User, opts ...grpc.
 // for forward compatibility.
 type GoKeeperServer interface {
 	RegisterUser(context.Context, *User) (*StatusResponce, error)
-	AuthenticateUser(context.Context, *User) (*StatusResponce, error)
+	AuthenticateUser(context.Context, *User) (*User, error)
+	AuthorizateUser(context.Context, *User) (*User, error)
 	EditUser(context.Context, *User) (*StatusResponce, error)
 	DeleteUser(context.Context, *User) (*StatusResponce, error)
 	mustEmbedUnimplementedGoKeeperServer()
@@ -104,8 +117,11 @@ type UnimplementedGoKeeperServer struct{}
 func (UnimplementedGoKeeperServer) RegisterUser(context.Context, *User) (*StatusResponce, error) {
 	return nil, status.Error(codes.Unimplemented, "method RegisterUser not implemented")
 }
-func (UnimplementedGoKeeperServer) AuthenticateUser(context.Context, *User) (*StatusResponce, error) {
+func (UnimplementedGoKeeperServer) AuthenticateUser(context.Context, *User) (*User, error) {
 	return nil, status.Error(codes.Unimplemented, "method AuthenticateUser not implemented")
+}
+func (UnimplementedGoKeeperServer) AuthorizateUser(context.Context, *User) (*User, error) {
+	return nil, status.Error(codes.Unimplemented, "method AuthorizateUser not implemented")
 }
 func (UnimplementedGoKeeperServer) EditUser(context.Context, *User) (*StatusResponce, error) {
 	return nil, status.Error(codes.Unimplemented, "method EditUser not implemented")
@@ -170,6 +186,24 @@ func _GoKeeper_AuthenticateUser_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GoKeeper_AuthorizateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).AuthorizateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_AuthorizateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).AuthorizateUser(ctx, req.(*User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _GoKeeper_EditUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(User)
 	if err := dec(in); err != nil {
@@ -220,6 +254,10 @@ var GoKeeper_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AuthenticateUser",
 			Handler:    _GoKeeper_AuthenticateUser_Handler,
+		},
+		{
+			MethodName: "AuthorizateUser",
+			Handler:    _GoKeeper_AuthorizateUser_Handler,
 		},
 		{
 			MethodName: "EditUser",

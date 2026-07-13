@@ -1,7 +1,7 @@
 package model
 
 type Passwords struct {
-	Token    string `json:"token"`
-	Pair     string `json:"pair"`
-	Metadata string `json:"metadata"`
+	Uuid     string
+	Pair     string
+	Metadata string
 }

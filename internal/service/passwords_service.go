@@ -1,14 +1,14 @@
 package service
 
-// TODO: read record (token + metadata)
+// TODO: read record (uuid + metadata)
 // TODO: insert recors (model.password)
 // TODO: edit record (model.password)
-// TODO: delete record (token + metadata)
-// TODO: delete records (token)
+// TODO: delete record (uuid + metadata)
+// TODO: delete records (uuid)
 
 // func GetUserByLogin(ctx context.Context, login string) model.Users {
 // 	storageUsers := repository.NewUsersStorage(config.DBconn)
-// 	return storageUsers.GetUserByLogin(ctx, token)
+// 	return storageUsers.GetUserByLogin(ctx, uuid)
 // }
 
 // func GetUserByLogin(ctx context.Context, login string) model.Users {

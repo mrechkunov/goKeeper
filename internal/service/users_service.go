@@ -23,8 +23,29 @@ func InsertUser(ctx context.Context, user model.Users) error {
 	}
 }
 
-// TODO: autorization user (token check) extend
+// // GetPassHashByLogin return passHash by user login
+// func GetPassHashByLogin(ctx context.Context, login string) (passHash string, err error) {
+// 	usersStorage := repository.NewUsersStorage(config.DBconn)
+// 	user, err := usersStorage.ReadUser(ctx, login)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	return user.PasswordHash, nil
+// }
 
-// TODO: authentification user (login + pass check, responce token)
+// GetUserByLogin return user by login
+func GetUserByLogin(ctx context.Context, login string) (user model.Users, err error) {
+	usersStorage := repository.NewUsersStorage(config.DBconn)
+	user, err = usersStorage.ReadUser(ctx, login)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+// TODO: autorization user (uuid check) extend
+
+// TODO: authentification user (login + pass check, responce uuid)
+
 // TODO: edit user (change password for autorizated user)
 // TODO: delete user (delete user and all data in torages)
