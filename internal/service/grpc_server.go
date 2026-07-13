@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	"github.com/mrechkunov/goKeeper.git/internal/model"
@@ -12,21 +13,26 @@ type GoKeeperServer struct {
 	pb.UnimplementedGoKeeperServer
 }
 
+// RegisterUser Register new user if not exist in DB
 func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *pb.StatusResponce, err error) {
 	user := model.Users{
 		Login:        in.GetLogin(),
-		PasswordHash: in.GetPassworHash(),
-		Uuid:         in.GetUuid(),
+		PasswordHash: in.GetPasswordHash(),
+	}
+	if user.PasswordHash == "" {
+		err = errors.New("empty pass")
+		return out, err
 	}
 	err = InsertUser(ctx, user)
 	if err != nil {
 		logger.Log.Infoln("Error while insert user:", err)
 		return out, err
 	}
-	result := "OK"
+	result := "New user sucsessful registered"
 	out = pb.StatusResponce_builder{
 		Result: &result,
 	}.Build()
+	// TODO:авторизировать пользователя
 
 	return out, nil
 }
@@ -38,14 +44,13 @@ func (gk *GoKeeperServer) AuthenticateUser(ctx context.Context, in *pb.User) (ou
 		return out, err
 	}
 	out = pb.User_builder{
-		Login:       &user.Login,
-		PassworHash: &user.PasswordHash,
-		Uuid:        &user.Uuid,
+		Login:        &user.Login,
+		PasswordHash: &user.PasswordHash,
 	}.Build()
 	return out, nil
 }
 
-// AuthorizateUser возвращает пользователя с полем Uuid + передает Uuid в поле MD
+// AuthorizateUser возвращает пользователя с полем login + передает token в поле MD
 func (gk *GoKeeperServer) AuthorizateUser(ctx context.Context, in *pb.User) (out *pb.User, err error) {
 	user, err := GetUserByLogin(ctx, in.GetLogin())
 	// метаданные создать
@@ -53,9 +58,9 @@ func (gk *GoKeeperServer) AuthorizateUser(ctx context.Context, in *pb.User) (out
 		return out, err
 	}
 	out = pb.User_builder{
-		Login:       &user.Login,
-		PassworHash: &user.PasswordHash,
-		Uuid:        &user.Uuid,
+		Login:        &user.Login,
+		PasswordHash: &user.PasswordHash,
 	}.Build()
+
 	return out, nil
 }

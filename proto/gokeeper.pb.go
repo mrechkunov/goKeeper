@@ -21,14 +21,13 @@ const (
 )
 
 type User struct {
-	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Login       *string                `protobuf:"bytes,1,opt,name=login"`
-	xxx_hidden_PassworHash *string                `protobuf:"bytes,2,opt,name=passworHash"`
-	xxx_hidden_Uuid        *string                `protobuf:"bytes,3,opt,name=uuid"`
-	XXX_raceDetectHookData protoimpl.RaceDetectHookData
-	XXX_presence           [1]uint32
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
+	state                   protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Login        *string                `protobuf:"bytes,1,opt,name=login"`
+	xxx_hidden_PasswordHash *string                `protobuf:"bytes,2,opt,name=passwordHash"`
+	XXX_raceDetectHookData  protoimpl.RaceDetectHookData
+	XXX_presence            [1]uint32
+	unknownFields           protoimpl.UnknownFields
+	sizeCache               protoimpl.SizeCache
 }
 
 func (x *User) Reset() {
@@ -66,20 +65,10 @@ func (x *User) GetLogin() string {
 	return ""
 }
 
-func (x *User) GetPassworHash() string {
+func (x *User) GetPasswordHash() string {
 	if x != nil {
-		if x.xxx_hidden_PassworHash != nil {
-			return *x.xxx_hidden_PassworHash
-		}
-		return ""
-	}
-	return ""
-}
-
-func (x *User) GetUuid() string {
-	if x != nil {
-		if x.xxx_hidden_Uuid != nil {
-			return *x.xxx_hidden_Uuid
+		if x.xxx_hidden_PasswordHash != nil {
+			return *x.xxx_hidden_PasswordHash
 		}
 		return ""
 	}
@@ -88,17 +77,12 @@ func (x *User) GetUuid() string {
 
 func (x *User) SetLogin(v string) {
 	x.xxx_hidden_Login = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 3)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 2)
 }
 
-func (x *User) SetPassworHash(v string) {
-	x.xxx_hidden_PassworHash = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 3)
-}
-
-func (x *User) SetUuid(v string) {
-	x.xxx_hidden_Uuid = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 3)
+func (x *User) SetPasswordHash(v string) {
+	x.xxx_hidden_PasswordHash = &v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 2)
 }
 
 func (x *User) HasLogin() bool {
@@ -108,18 +92,11 @@ func (x *User) HasLogin() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
 }
 
-func (x *User) HasPassworHash() bool {
+func (x *User) HasPasswordHash() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 1)
-}
-
-func (x *User) HasUuid() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
 }
 
 func (x *User) ClearLogin() {
@@ -127,22 +104,16 @@ func (x *User) ClearLogin() {
 	x.xxx_hidden_Login = nil
 }
 
-func (x *User) ClearPassworHash() {
+func (x *User) ClearPasswordHash() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 1)
-	x.xxx_hidden_PassworHash = nil
-}
-
-func (x *User) ClearUuid() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 2)
-	x.xxx_hidden_Uuid = nil
+	x.xxx_hidden_PasswordHash = nil
 }
 
 type User_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	Login       *string
-	PassworHash *string
-	Uuid        *string
+	Login        *string
+	PasswordHash *string
 }
 
 func (b0 User_builder) Build() *User {
@@ -150,16 +121,12 @@ func (b0 User_builder) Build() *User {
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.Login != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 3)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 2)
 		x.xxx_hidden_Login = b.Login
 	}
-	if b.PassworHash != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 3)
-		x.xxx_hidden_PassworHash = b.PassworHash
-	}
-	if b.Uuid != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 3)
-		x.xxx_hidden_Uuid = b.Uuid
+	if b.PasswordHash != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 2)
+		x.xxx_hidden_PasswordHash = b.PasswordHash
 	}
 	return m0
 }
@@ -246,11 +213,10 @@ var File_gokeeper_proto protoreflect.FileDescriptor
 
 const file_gokeeper_proto_rawDesc = "" +
 	"\n" +
-	"\x0egokeeper.proto\x12\x19mrechkunov.goKeeper.proto\"R\n" +
+	"\x0egokeeper.proto\x12\x19mrechkunov.goKeeper.proto\"@\n" +
 	"\x04User\x12\x14\n" +
-	"\x05login\x18\x01 \x01(\tR\x05login\x12 \n" +
-	"\vpassworHash\x18\x02 \x01(\tR\vpassworHash\x12\x12\n" +
-	"\x04uuid\x18\x03 \x01(\tR\x04uuid\"(\n" +
+	"\x05login\x18\x01 \x01(\tR\x05login\x12\"\n" +
+	"\fpasswordHash\x18\x02 \x01(\tR\fpasswordHash\"(\n" +
 	"\x0eStatusResponce\x12\x16\n" +
 	"\x06result\x18\x01 \x01(\tR\x06result2\xc3\x03\n" +
 	"\bGoKeeper\x12Z\n" +

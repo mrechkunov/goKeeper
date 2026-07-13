@@ -1,7 +1,7 @@
 package model
 
 type Passwords struct {
-	Uuid     string
+	Login    string
 	Pair     string
 	Metadata string
 }

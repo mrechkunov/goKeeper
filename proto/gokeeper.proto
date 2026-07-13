@@ -14,8 +14,7 @@ service GoKeeper {
 
 message User {
     string login = 1;
-    string passworHash = 2;
-    string uuid = 3;
+    string passwordHash = 2;
 }
 
 message StatusResponce {

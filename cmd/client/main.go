@@ -35,8 +35,7 @@ func main() {
 
 	var user pb.User
 	user.SetLogin("ivan")
-	user.SetPassworHash("pass hash test")
-	user.SetUuid("uuid test")
+	user.SetPasswordHash("")
 	resp, err := client.RegisterUser(context.Background(), &user)
 	if err != nil {
 		logger.Log.Errorln("error while register user: ", err)
