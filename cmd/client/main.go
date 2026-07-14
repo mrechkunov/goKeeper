@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	pb "github.com/mrechkunov/goKeeper.git/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/metadata"
 )
 
 const (
@@ -29,17 +31,31 @@ func main() {
 		log.Fatalf("Не удалось подключиться к gRPC серверу: %v", err)
 	}
 	defer conn.Close()
-	// 3. Создаем клиента для сервиса
+	//Создаем клиента для сервиса
 	client := pb.NewGoKeeperClient(conn)
-	// 4. Делаем запрос к серверу
+	//Делаем запрос к серверу
 
 	var user pb.User
 	user.SetLogin("ivan")
-	user.SetPasswordHash("")
-	resp, err := client.RegisterUser(context.Background(), &user)
+	user.SetPasswordHash("test")
+	var header metadata.MD
+	resp, err := client.RegisterUser(context.Background(), &user, grpc.Header(&header))
 	if err != nil {
 		logger.Log.Errorln("error while register user: ", err)
 	}
 	logger.Log.Infoln("server resp:", resp)
+
+	if vals := header.Get("authorization"); len(vals) > 0 {
+		token := vals[0]
+
+		fmt.Println("token", token)
+
+	}
+	if vals := header.Get("userlogin"); len(vals) > 0 {
+
+		login := vals[0]
+
+		fmt.Println("login", login)
+	}
 
 }

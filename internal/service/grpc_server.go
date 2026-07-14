@@ -4,9 +4,12 @@ import (
 	"context"
 	"errors"
 
+	"github.com/mrechkunov/goKeeper.git/internal/auth"
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	"github.com/mrechkunov/goKeeper.git/internal/model"
 	pb "github.com/mrechkunov/goKeeper.git/proto"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 type GoKeeperServer struct {
@@ -32,8 +35,23 @@ func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *p
 	out = pb.StatusResponce_builder{
 		Result: &result,
 	}.Build()
-	// TODO:авторизировать пользователя
-
+	// генерируем token
+	token, err := auth.GenerateToken(user.Login)
+	if err != nil {
+		return
+	}
+	ulogin, err := auth.GetLoginByToken(token)
+	if err != nil {
+		logger.Log.Warnln(err)
+		return
+	}
+	// Создаем исходящие метаданные для заголовков (headers)
+	headerMD := metadata.Pairs(
+		"authorization", token,
+		"userlogin", ulogin,
+	)
+	// Отправляем заголовки клиенту
+	grpc.SetHeader(ctx, headerMD)
 	return out, nil
 }
 
@@ -61,6 +79,5 @@ func (gk *GoKeeperServer) AuthorizateUser(ctx context.Context, in *pb.User) (out
 		Login:        &user.Login,
 		PasswordHash: &user.PasswordHash,
 	}.Build()
-
 	return out, nil
 }
