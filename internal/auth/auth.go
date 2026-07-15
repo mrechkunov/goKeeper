@@ -56,7 +56,7 @@ func GetLoginByToken(tokenString string) (login string, err error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method")
 		}
-		return secretKey, nil
+		return []byte(secretKey), nil
 	})
 
 	if err != nil {
@@ -113,23 +113,3 @@ func ValidLuhnCardNumber(num *int64) bool {
 	// номер заказа валиден если сумма делится без остатка на 10
 	return sum%10 == 0
 }
-
-// // WithAuth добавляет дополнительный код для авторизации пользователя, записывает в контекст структуру авторизированного пользователя
-// // и возвращает новый http.Handler.
-// func WithAuth(h http.HandlerFunc) http.HandlerFunc {
-// 	return func(w http.ResponseWriter, r *http.Request) {
-// 		authToken := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
-// 		err := ValidateToken(authToken)
-// 		if err != nil {
-// 			http.Error(w, "missing authorization header", http.StatusUnauthorized)
-// 			return
-// 		}
-// 		user := service.GetUserByToken(r.Context(), authToken)
-// 		if user.Login == "" {
-// 			http.Error(w, "wrong token", http.StatusUnauthorized)
-// 			return
-// 		}
-// 		r = r.WithContext(context.WithValue(r.Context(), "user", user))
-// 		h.ServeHTTP(w, r)
-// 	}
-// }
