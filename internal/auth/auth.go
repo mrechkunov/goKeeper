@@ -9,6 +9,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const secretKey = "secret key"
@@ -60,7 +61,7 @@ func GetLoginByToken(tokenString string) (login string, err error) {
 	})
 
 	if err != nil {
-		logger.Log.Warnln("Ошибка при парсинге токена:", err)
+		logger.Log.Warnln("Error while parsing token", err)
 		return
 	}
 
@@ -68,7 +69,7 @@ func GetLoginByToken(tokenString string) (login string, err error) {
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		login = claims["username"].(string)
 	} else {
-		err = errors.New("Недействительный токен")
+		err = errors.New("Error while claims get: token is expired")
 	}
 	return login, err
 }
@@ -83,6 +84,20 @@ func GetLoginByToken(tokenString string) (login string, err error) {
 // 	encryptedPassword := h.Sum(nil)
 // 	return hex.EncodeToString(encryptedPassword)
 // }
+
+// HashPassword Функция для хеширования пароля
+func HashPassword(password string) (string, error) {
+	// Cost (число итераций) определяет время вычисления.
+	// Значение 14 является хорошим балансом между безопасностью и скоростью.
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+// CheckPasswordHash Функция для проверки, совпадает ли введенный пароль с хешем
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
 
 // проверяет номер карты по алгоритму Луна
 func ValidLuhnCardNumber(num *int64) bool {

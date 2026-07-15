@@ -70,10 +70,10 @@ func (su *StorageUsers) ReadUser(ctx context.Context, login string) (user model.
 
 // UpdateUser изменить данные пользователя (только если login верный) U
 func (su *StorageUsers) UpdateUser(ctx context.Context, user model.Users) error {
-	ctxWithTimeout, cancel := context.WithTimeout(ctx, 3*time.Second)
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
 	defer cancel()
 	sqlStatement := `UPDATE users 
-				SET u_password = $1, 
+				SET u_password = $1
 				WHERE u_login = $2;`
 	_, err := su.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, user.PasswordHash, user.Login)
 	if err != nil {
@@ -98,7 +98,6 @@ func (su *StorageUsers) DeleteUser(ctx context.Context, user model.Users) error 
 	//TODO: make sync group and run in gorutines
 	PassStorage := NewPasswordsStorage(su.DBconnection)
 	PassStorage.DeleteDataByLogin(ctxWithTimeout, user.Login)
-	PassStorage.Close()
 
 	//TODO: delete in cards table
 	//TODO: delete in binary file table

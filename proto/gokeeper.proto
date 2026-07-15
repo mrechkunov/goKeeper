@@ -6,9 +6,9 @@ option go_package = "github.com/mrechkunov/goKeeper.git/proto";
 
 service GoKeeper {
   rpc RegisterUser (User) returns (StatusResponce);
-  rpc AuthenticateUser (User) returns (User); // return pass from db by login
-  rpc AuthorizateUser (User) returns (User); // возвращает пользователя с заполненым полем uuid и MD с полем authirizate
-  rpc EditUser (User) returns (StatusResponce); // change password
+  rpc GetPassHash (User) returns (User);
+  rpc AuthenticateUser (User) returns (User); // return token in metadata if login & pass is correct
+  rpc EditUser (User) returns (User); // change password
   rpc DeleteUser (User) returns (StatusResponce);
 }
 

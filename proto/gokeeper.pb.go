@@ -218,12 +218,11 @@ const file_gokeeper_proto_rawDesc = "" +
 	"\x05login\x18\x01 \x01(\tR\x05login\x12\"\n" +
 	"\fpasswordHash\x18\x02 \x01(\tR\fpasswordHash\"(\n" +
 	"\x0eStatusResponce\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\tR\x06result2\xc3\x03\n" +
+	"\x06result\x18\x01 \x01(\tR\x06result2\xe4\x02\n" +
 	"\bGoKeeper\x12Z\n" +
 	"\fRegisterUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a).mrechkunov.goKeeper.proto.StatusResponce\x12T\n" +
-	"\x10AuthenticateUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a\x1f.mrechkunov.goKeeper.proto.User\x12S\n" +
-	"\x0fAuthorizateUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a\x1f.mrechkunov.goKeeper.proto.User\x12V\n" +
-	"\bEditUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a).mrechkunov.goKeeper.proto.StatusResponce\x12X\n" +
+	"\x10AuthenticateUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a\x1f.mrechkunov.goKeeper.proto.User\x12L\n" +
+	"\bEditUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a\x1f.mrechkunov.goKeeper.proto.User\x12X\n" +
 	"\n" +
 	"DeleteUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a).mrechkunov.goKeeper.proto.StatusResponceB*Z(github.com/mrechkunov/goKeeper.git/protob\beditionsp\xe8\a"
 
@@ -235,16 +234,14 @@ var file_gokeeper_proto_goTypes = []any{
 var file_gokeeper_proto_depIdxs = []int32{
 	0, // 0: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:input_type -> mrechkunov.goKeeper.proto.User
 	0, // 1: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:input_type -> mrechkunov.goKeeper.proto.User
-	0, // 2: mrechkunov.goKeeper.proto.GoKeeper.AuthorizateUser:input_type -> mrechkunov.goKeeper.proto.User
-	0, // 3: mrechkunov.goKeeper.proto.GoKeeper.EditUser:input_type -> mrechkunov.goKeeper.proto.User
-	0, // 4: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:input_type -> mrechkunov.goKeeper.proto.User
-	1, // 5: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:output_type -> mrechkunov.goKeeper.proto.StatusResponce
-	0, // 6: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:output_type -> mrechkunov.goKeeper.proto.User
-	0, // 7: mrechkunov.goKeeper.proto.GoKeeper.AuthorizateUser:output_type -> mrechkunov.goKeeper.proto.User
-	1, // 8: mrechkunov.goKeeper.proto.GoKeeper.EditUser:output_type -> mrechkunov.goKeeper.proto.StatusResponce
-	1, // 9: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:output_type -> mrechkunov.goKeeper.proto.StatusResponce
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
+	0, // 2: mrechkunov.goKeeper.proto.GoKeeper.EditUser:input_type -> mrechkunov.goKeeper.proto.User
+	0, // 3: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:input_type -> mrechkunov.goKeeper.proto.User
+	1, // 4: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:output_type -> mrechkunov.goKeeper.proto.StatusResponce
+	0, // 5: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:output_type -> mrechkunov.goKeeper.proto.User
+	0, // 6: mrechkunov.goKeeper.proto.GoKeeper.EditUser:output_type -> mrechkunov.goKeeper.proto.User
+	1, // 7: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:output_type -> mrechkunov.goKeeper.proto.StatusResponce
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
