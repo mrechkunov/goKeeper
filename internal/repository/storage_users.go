@@ -15,12 +15,12 @@ type StorageUsers struct {
 	DBconnection *sql.DB
 }
 
-// создаем новый сторадж для работы с таблицей пользователей
+// NewUsersStorage new storage for work with users table in db
 func NewUsersStorage(DBconn *sql.DB) StorageUsers {
 	return StorageUsers{DBconnection: DBconn}
 }
 
-// is user exist in db ?
+// IsExist return true if user with login is exist in db
 func (su *StorageUsers) IsExist(ctx context.Context, login string) (bool, error) {
 	var user model.Users
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)

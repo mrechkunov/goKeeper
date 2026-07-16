@@ -53,49 +53,50 @@ func main() {
 		token := vals[0]
 		fmt.Println("token", token)
 	}
+	fmt.Println(tokenAuth)
 
-	fmt.Println("--------------Authenticate user----------")
-	respAuth, err := client.AuthenticateUser(context.Background(), &user, grpc.Header(&header))
-	if err != nil {
-		logger.Log.Errorln("error while Authenticate user: ", err)
-	}
-	logger.Log.Infoln("server resp:", respAuth)
-	if vals := header.Get("authorization"); len(vals) > 0 {
-		tokenAuth = vals[0]
-		fmt.Println("token", tokenAuth)
-	}
-	fmt.Println("login:", respAuth.GetLogin())
-	fmt.Println("pass:", respAuth.GetPasswordHash())
-	fmt.Println("token:", tokenAuth)
+	// fmt.Println("--------------Authenticate user----------")
+	// respAuth, err := client.AuthenticateUser(context.Background(), &user, grpc.Header(&header))
+	// if err != nil {
+	// 	logger.Log.Errorln("error while Authenticate user: ", err)
+	// }
+	// logger.Log.Infoln("server resp:", respAuth)
+	// if vals := header.Get("authorization"); len(vals) > 0 {
+	// 	tokenAuth = vals[0]
+	// 	fmt.Println("token", tokenAuth)
+	// }
+	// fmt.Println("login:", respAuth.GetLogin())
+	// fmt.Println("pass:", respAuth.GetPasswordHash())
+	// fmt.Println("token:", tokenAuth)
 
-	fmt.Println("--------------Edit user----------")
-	md := metadata.Pairs(
-		"authorization", tokenAuth,
-	)
-	user.SetLogin("ivan")
-	user.SetPasswordHash("password123")
-	ctxWithAuth := metadata.NewOutgoingContext(context.Background(), md)
-	respEdit, err := client.EditUser(ctxWithAuth, &user, grpc.Header(&header))
-	if err != nil {
-		logger.Log.Errorln("error while edit user: ", err)
-	}
-	logger.Log.Infoln("server resp:", respEdit)
-	if vals := header.Get("authorization"); len(vals) > 0 {
-		tokenAuth = vals[0]
-		fmt.Println("token", tokenAuth)
-	}
-	fmt.Println("login:", respEdit.GetLogin())
-	fmt.Println("pass:", respEdit.GetPasswordHash())
-	fmt.Println("--------------Delete user----------")
-	user.SetLogin("ivan")
-	ctxWithAuth = metadata.NewOutgoingContext(context.Background(), md)
-	respDelete, err := client.DeleteUser(ctxWithAuth, &user, grpc.Header(&header))
-	if err != nil {
-		logger.Log.Errorln("error while delete user: ", err)
-	}
-	logger.Log.Infoln("server resp:", respDelete)
-	if vals := header.Get("authorization"); len(vals) > 0 {
-		tokenAuth = vals[0]
-		fmt.Println("token", tokenAuth)
-	}
+	// fmt.Println("--------------Edit user----------")
+	// md := metadata.Pairs(
+	// 	"authorization", tokenAuth,
+	// )
+	// user.SetLogin("ivan")
+	// user.SetPasswordHash("password123")
+	// ctxWithAuth := metadata.NewOutgoingContext(context.Background(), md)
+	// respEdit, err := client.EditUser(ctxWithAuth, &user, grpc.Header(&header))
+	// if err != nil {
+	// 	logger.Log.Errorln("error while edit user: ", err)
+	// }
+	// logger.Log.Infoln("server resp:", respEdit)
+	// if vals := header.Get("authorization"); len(vals) > 0 {
+	// 	tokenAuth = vals[0]
+	// 	fmt.Println("token", tokenAuth)
+	// }
+	// fmt.Println("login:", respEdit.GetLogin())
+	// fmt.Println("pass:", respEdit.GetPasswordHash())
+	// fmt.Println("--------------Delete user----------")
+	// user.SetLogin("ivan")
+	// ctxWithAuth = metadata.NewOutgoingContext(context.Background(), md)
+	// respDelete, err := client.DeleteUser(ctxWithAuth, &user, grpc.Header(&header))
+	// if err != nil {
+	// 	logger.Log.Errorln("error while delete user: ", err)
+	// }
+	// logger.Log.Infoln("server resp:", respDelete)
+	// if vals := header.Get("authorization"); len(vals) > 0 {
+	// 	tokenAuth = vals[0]
+	// 	fmt.Println("token", tokenAuth)
+	// }
 }

@@ -48,7 +48,7 @@ func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *p
 	}
 	// Создаем исходящие метаданные для заголовков (headers)
 	headerMD := metadata.Pairs(
-		"authorization", token,
+		"authorization", "Bearer "+token,
 	)
 	// Отправляем заголовки клиенту
 	grpc.SetHeader(ctx, headerMD)
@@ -70,7 +70,7 @@ func (gk *GoKeeperServer) AuthenticateUser(ctx context.Context, in *pb.User) (ou
 	}
 	// Создаем исходящие метаданные для заголовков (headers)
 	headerMD := metadata.Pairs(
-		"authorization", token,
+		"authorization", "Bearer "+token,
 	)
 	// Отправляем заголовки клиенту
 	grpc.SetHeader(ctx, headerMD)
@@ -81,31 +81,13 @@ func (gk *GoKeeperServer) AuthenticateUser(ctx context.Context, in *pb.User) (ou
 	return out, nil
 }
 func (gk *GoKeeperServer) EditUser(ctx context.Context, in *pb.User) (out *pb.User, err error) {
-	// проверяем авторизирован ли пользователь
-	var token string
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, status.Errorf(codes.DataLoss, "failed to get metadata")
-	}
-	if values := md["authorization"]; len(values) > 0 {
-		token = values[0]
-	}
-	if err = auth.ValidateToken(token); err != nil {
-		return out, status.Error(codes.Unauthenticated, "token is not valid")
-	}
-	login, err := auth.GetLoginByToken(token)
-	if err != nil {
-		return out, status.Error(codes.Unauthenticated, "no login in payload")
-	}
-	if login != in.GetLogin() {
-		return out, status.Error(codes.Unauthenticated, "wrong login & token")
-	}
 	pass, err := auth.HashPassword(in.GetPasswordHash())
 	if err != nil {
 		return
 	}
+
 	user := model.Users{
-		Login:        login,
+		Login:        ctx.Value(userLoginKey).(string),
 		PasswordHash: pass,
 	}
 	out = pb.User_builder{

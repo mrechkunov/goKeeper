@@ -36,7 +36,7 @@ func main() {
 		logger.Log.Warnln("Error while open TLS cert: ", err)
 	}
 	// Создаем gRPC сервер без зарегистрированной службы
-	s := grpc.NewServer(grpc.Creds(creds))
+	s := grpc.NewServer(grpc.Creds(creds), grpc.UnaryInterceptor(service.AuthInterceptor))
 	// Регистрируем сервис
 	pb.RegisterGoKeeperServer(s, &service.GoKeeperServer{})
 	logger.Log.Infoln("gRPC server starting")
