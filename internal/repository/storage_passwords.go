@@ -46,7 +46,7 @@ func (sp *StoragePasswords) InsertData(ctx context.Context, data model.Passwords
 	defer cancel()
 	if sp.isExist(ctxWithTimeout, data) {
 		err := errors.New("data is already exists in DB")
-		logger.Log.Infoln("data is already exists in DB")
+		logger.Log.Warn(err)
 		return err
 	}
 	sqlStatement := `INSERT INTO passwords (p_login, p_pair, p_metadata) 

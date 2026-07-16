@@ -33,8 +33,9 @@ func GenerateToken(uLogin string) (string, error) {
 	return tokenString, nil
 }
 
-// validate token signature
+// ValidateToken validate token signature
 func ValidateToken(tokenString string) error {
+	fmt.Println("token in validate func:", tokenString)
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		return []byte(secretKey), nil
 	})
@@ -73,17 +74,6 @@ func GetLoginByToken(tokenString string) (login string, err error) {
 	}
 	return login, err
 }
-
-// // encrypt the password
-// func EncryptPass(password string) string {
-// 	h := hmac.New(sha256.New, []byte(secretKey))
-// 	_, err := h.Write([]byte(password))
-// 	if err != nil {
-// 		logger.Log.Errorln("error while encrypt password", err)
-// 	}
-// 	encryptedPassword := h.Sum(nil)
-// 	return hex.EncodeToString(encryptedPassword)
-// }
 
 // HashPassword Функция для хеширования пароля
 func HashPassword(password string) (string, error) {

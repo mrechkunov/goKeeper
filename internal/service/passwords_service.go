@@ -1,7 +1,21 @@
 package service
 
+import (
+	"context"
+
+	"github.com/mrechkunov/goKeeper.git/internal/config"
+	"github.com/mrechkunov/goKeeper.git/internal/model"
+	"github.com/mrechkunov/goKeeper.git/internal/repository"
+)
+
+// AddData insert data in storage
+func AddData(ctx context.Context, data model.Passwords) error {
+	passStorage := repository.NewPasswordsStorage(config.DBconn)
+	return passStorage.InsertData(ctx, data)
+}
+
 // TODO: read record (uuid + metadata)
-// TODO: insert recors (model.password)
+
 // TODO: edit record (model.password)
 // TODO: delete record (uuid + metadata)
 // TODO: delete records (uuid)

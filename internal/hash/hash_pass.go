@@ -1,12 +1,6 @@
 package hash
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/rand"
-	"fmt"
-	"io"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -22,68 +16,6 @@ func HashPassword(password string) (string, error) {
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
-}
-
-// func main() {
-// 	password := "mySuperSecret123"
-
-// 	// Хэширование
-// 	hash, _ := HashPassword(password)
-// 	fmt.Println("Сохраняемый хэш:", hash)
-
-// 	// Проверка
-// 	isMatch := CheckPasswordHash("mySuperSecret123", hash)
-// 	fmt.Printf("Пароль верный: %v\n", isMatch) // true
-// }
-
-func Encrypt(plaintext []byte, key []byte) ([]byte, error) {
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	aesGCM, err := cipher.NewGCM(block)
-	if err != nil {
-		return nil, err
-	}
-
-	// Генерируем случайный Nonce (число одноразового использования)
-	nonce := make([]byte, aesGCM.NonceSize())
-	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		return nil, err
-	}
-
-	// Шифруем данные и прикрепляем nonce к началу массива
-	ciphertext := aesGCM.Seal(nonce, nonce, plaintext, nil)
-	return ciphertext, nil
-}
-
-func Decrypt(ciphertext []byte, key []byte) ([]byte, error) {
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	aesGCM, err := cipher.NewGCM(block)
-	if err != nil {
-		return nil, err
-	}
-
-	nonceSize := aesGCM.NonceSize()
-	if len(ciphertext) < nonceSize {
-		return nil, fmt.Errorf("зашифрованный текст слишком короткий")
-	}
-
-	// Извлекаем nonce из начала зашифрованного сообщения
-	nonce := ciphertext[:nonceSize]
-	ciphertextBytes := ciphertext[nonceSize:]
-
-	plaintext, err := aesGCM.Open(nil, nonce, ciphertextBytes, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return plaintext, nil
 }
 
 // func main() {

@@ -19,14 +19,14 @@ type GoKeeperServer struct {
 }
 
 // RegisterUser Register new user if not exist in DB
-func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *pb.StatusResponce, err error) {
-	pass, err := auth.HashPassword(in.GetPasswordHash())
+func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *pb.EmptyMessage, err error) {
+	passHash, err := auth.HashPassword(in.GetPasswordHash())
 	if err != nil {
 		return
 	}
 	user := model.Users{
 		Login:        in.GetLogin(),
-		PasswordHash: pass,
+		PasswordHash: passHash,
 	}
 	if user.PasswordHash == "" {
 		err = errors.New("empty pass")
@@ -37,18 +37,14 @@ func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *p
 		logger.Log.Infoln("Error while insert user:", err)
 		return out, err
 	}
-	result := "New user sucsessful registered"
-	out = pb.StatusResponce_builder{
-		Result: &result,
-	}.Build()
 	// генерируем token
 	token, err := auth.GenerateToken(user.Login)
 	if err != nil {
-		return
+		return out, err
 	}
 	// Создаем исходящие метаданные для заголовков (headers)
 	headerMD := metadata.Pairs(
-		"authorization", "Bearer "+token,
+		"authorization", token, //"Bearer "+token,
 	)
 	// Отправляем заголовки клиенту
 	grpc.SetHeader(ctx, headerMD)
@@ -56,7 +52,7 @@ func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *p
 }
 
 // AuthenticateUser возвращает по логину и hash паролю token в md
-func (gk *GoKeeperServer) AuthenticateUser(ctx context.Context, in *pb.User) (out *pb.User, err error) {
+func (gk *GoKeeperServer) AuthenticateUser(ctx context.Context, in *pb.User) (out *pb.EmptyMessage, err error) {
 	user, err := GetUserByLogin(ctx, in.GetLogin())
 	if err != nil {
 		return out, err
@@ -74,10 +70,6 @@ func (gk *GoKeeperServer) AuthenticateUser(ctx context.Context, in *pb.User) (ou
 	)
 	// Отправляем заголовки клиенту
 	grpc.SetHeader(ctx, headerMD)
-	out = pb.User_builder{
-		Login:        &user.Login,
-		PasswordHash: &user.PasswordHash,
-	}.Build()
 	return out, nil
 }
 func (gk *GoKeeperServer) EditUser(ctx context.Context, in *pb.User) (out *pb.User, err error) {
@@ -85,7 +77,6 @@ func (gk *GoKeeperServer) EditUser(ctx context.Context, in *pb.User) (out *pb.Us
 	if err != nil {
 		return
 	}
-
 	user := model.Users{
 		Login:        ctx.Value(userLoginKey).(string),
 		PasswordHash: pass,
@@ -95,7 +86,6 @@ func (gk *GoKeeperServer) EditUser(ctx context.Context, in *pb.User) (out *pb.Us
 		PasswordHash: &user.PasswordHash,
 	}.Build()
 	return out, EditUser(ctx, user)
-
 }
 
 func (gk *GoKeeperServer) GetPassHash(ctx context.Context, in *pb.User) (out *pb.User, err error) {
@@ -110,7 +100,7 @@ func (gk *GoKeeperServer) GetPassHash(ctx context.Context, in *pb.User) (out *pb
 	return out, nil
 }
 
-func (gk *GoKeeperServer) DeleteUser(ctx context.Context, in *pb.User) (out *pb.StatusResponce, err error) {
+func (gk *GoKeeperServer) DeleteUser(ctx context.Context, in *pb.User) (out *pb.EmptyMessage, err error) {
 	user := model.Users{
 		Login:        in.GetLogin(),
 		PasswordHash: in.GetPasswordHash(),
@@ -118,9 +108,17 @@ func (gk *GoKeeperServer) DeleteUser(ctx context.Context, in *pb.User) (out *pb.
 	if err = UserDelete(ctx, user); err != nil {
 		return out, status.Error(codes.Internal, "server error user not deleted")
 	}
-	result := "user deleted"
-	out = pb.StatusResponce_builder{
-		Result: &result,
-	}.Build()
+	return out, nil
+}
+
+func (gk *GoKeeperServer) SavePassword(ctx context.Context, in *pb.PasswordData) (out *pb.EmptyMessage, err error) {
+	data := model.Passwords{
+		Login:    in.GetLogin(),
+		Pair:     in.GetPair(),
+		Metadata: in.GetMetadata(),
+	}
+	if err = AddData(ctx, data); err != nil {
+		return out, status.Error(codes.Internal, "server error pass not saved")
+	}
 	return out, nil
 }

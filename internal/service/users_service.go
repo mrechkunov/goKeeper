@@ -39,7 +39,7 @@ func EditUser(ctx context.Context, user model.Users) (err error) {
 	return usersStorage.UpdateUser(ctx, user)
 }
 
-// TODO: delete user (delete user and all data in torages)
+// TODO: delete user (delete user and all data in storages)
 func UserDelete(ctx context.Context, user model.Users) (err error) {
 	usersStorage := repository.NewUsersStorage(config.DBconn)
 	return usersStorage.DeleteUser(ctx, user)

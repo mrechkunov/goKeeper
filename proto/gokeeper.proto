@@ -5,11 +5,12 @@ package mrechkunov.goKeeper.proto;
 option go_package = "github.com/mrechkunov/goKeeper.git/proto"; 
 
 service GoKeeper {
-  rpc RegisterUser (User) returns (StatusResponce);
+  rpc RegisterUser (User) returns (EmptyMessage);
   rpc GetPassHash (User) returns (User);
-  rpc AuthenticateUser (User) returns (User); // return token in metadata if login & pass is correct
+  rpc AuthenticateUser (User) returns (EmptyMessage); // return token in metadata if login & pass is correct
   rpc EditUser (User) returns (User); // change password
-  rpc DeleteUser (User) returns (StatusResponce);
+  rpc DeleteUser (User) returns (EmptyMessage);
+  rpc SavePassword (PasswordData) returns (EmptyMessage);
 }
 
 message User {
@@ -17,6 +18,13 @@ message User {
     string passwordHash = 2;
 }
 
+message EmptyMessage {}
+
+message PasswordData {
+    string login = 1;
+    string pair = 2;
+    string metadata =3;
+}
 message StatusResponce {
     string result = 1;
 }

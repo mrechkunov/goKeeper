@@ -32,13 +32,11 @@ func AuthInterceptor(
 	if info.FullMethod == "/mrechkunov.goKeeper.proto.GoKeeper/RegisterUser" {
 		return handler(ctx, req)
 	}
-
 	// Извлекаем метаданные из контекста
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, status.Error(codes.Unauthenticated, "no metadata in context")
 	}
-
 	// Получаем заголовок Authorization
 	values := md["authorization"]
 	if len(values) == 0 {
@@ -46,9 +44,9 @@ func AuthInterceptor(
 	}
 	authHeader := values[0]
 	token, err := extractToken(authHeader)
-	if err != nil {
-		return nil, status.Error(codes.Unauthenticated, err.Error())
-	}
+	// if err != nil {
+	// 	return nil, status.Error(codes.Unauthenticated, err.Error())
+	// }
 
 	// Валидация токена
 	err = auth.ValidateToken(token)
