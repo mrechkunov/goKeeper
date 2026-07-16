@@ -44,9 +44,9 @@ func AuthInterceptor(
 	}
 	authHeader := values[0]
 	token, err := extractToken(authHeader)
-	// if err != nil {
-	// 	return nil, status.Error(codes.Unauthenticated, err.Error())
-	// }
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, err.Error())
+	}
 
 	// Валидация токена
 	err = auth.ValidateToken(token)
@@ -67,6 +67,7 @@ func AuthInterceptor(
 func extractToken(header string) (string, error) {
 	parts := strings.Split(header, " ")
 	if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
+		fmt.Println(header)
 		return "", fmt.Errorf("неверный формат заголовка авторизации")
 	}
 	return parts[1], nil

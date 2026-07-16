@@ -13,6 +13,10 @@ func AddData(ctx context.Context, data model.Passwords) error {
 	passStorage := repository.NewPasswordsStorage(config.DBconn)
 	return passStorage.InsertData(ctx, data)
 }
+func GetData(ctx context.Context, login, metadata string) (data model.Passwords, err error) {
+	passStorage := repository.NewPasswordsStorage(config.DBconn)
+	return passStorage.GetData(ctx, login, metadata)
+}
 
 // TODO: read record (uuid + metadata)
 

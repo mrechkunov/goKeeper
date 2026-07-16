@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v7.35.1
-// source: gokeeper.proto
+// source: proto/gokeeper.proto
 
 package proto
 
@@ -32,7 +32,7 @@ type User struct {
 
 func (x *User) Reset() {
 	*x = User{}
-	mi := &file_gokeeper_proto_msgTypes[0]
+	mi := &file_proto_gokeeper_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +44,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_gokeeper_proto_msgTypes[0]
+	mi := &file_proto_gokeeper_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -139,7 +139,7 @@ type EmptyMessage struct {
 
 func (x *EmptyMessage) Reset() {
 	*x = EmptyMessage{}
-	mi := &file_gokeeper_proto_msgTypes[1]
+	mi := &file_proto_gokeeper_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -151,7 +151,7 @@ func (x *EmptyMessage) String() string {
 func (*EmptyMessage) ProtoMessage() {}
 
 func (x *EmptyMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_gokeeper_proto_msgTypes[1]
+	mi := &file_proto_gokeeper_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -187,7 +187,7 @@ type PasswordData struct {
 
 func (x *PasswordData) Reset() {
 	*x = PasswordData{}
-	mi := &file_gokeeper_proto_msgTypes[2]
+	mi := &file_proto_gokeeper_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -199,7 +199,7 @@ func (x *PasswordData) String() string {
 func (*PasswordData) ProtoMessage() {}
 
 func (x *PasswordData) ProtoReflect() protoreflect.Message {
-	mi := &file_gokeeper_proto_msgTypes[2]
+	mi := &file_proto_gokeeper_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -329,7 +329,7 @@ type StatusResponce struct {
 
 func (x *StatusResponce) Reset() {
 	*x = StatusResponce{}
-	mi := &file_gokeeper_proto_msgTypes[3]
+	mi := &file_proto_gokeeper_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -341,7 +341,7 @@ func (x *StatusResponce) String() string {
 func (*StatusResponce) ProtoMessage() {}
 
 func (x *StatusResponce) ProtoReflect() protoreflect.Message {
-	mi := &file_gokeeper_proto_msgTypes[3]
+	mi := &file_proto_gokeeper_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -396,11 +396,11 @@ func (b0 StatusResponce_builder) Build() *StatusResponce {
 	return m0
 }
 
-var File_gokeeper_proto protoreflect.FileDescriptor
+var File_proto_gokeeper_proto protoreflect.FileDescriptor
 
-const file_gokeeper_proto_rawDesc = "" +
+const file_proto_gokeeper_proto_rawDesc = "" +
 	"\n" +
-	"\x0egokeeper.proto\x12\x19mrechkunov.goKeeper.proto\"@\n" +
+	"\x14proto/gokeeper.proto\x12\x19mrechkunov.goKeeper.proto\"@\n" +
 	"\x04User\x12\x14\n" +
 	"\x05login\x18\x01 \x01(\tR\x05login\x12\"\n" +
 	"\fpasswordHash\x18\x02 \x01(\tR\fpasswordHash\"\x0e\n" +
@@ -410,7 +410,7 @@ const file_gokeeper_proto_rawDesc = "" +
 	"\x04pair\x18\x02 \x01(\tR\x04pair\x12\x1a\n" +
 	"\bmetadata\x18\x03 \x01(\tR\bmetadata\"(\n" +
 	"\x0eStatusResponce\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\tR\x06result2\x9b\x04\n" +
+	"\x06result\x18\x01 \x01(\tR\x06result2\xf8\x04\n" +
 	"\bGoKeeper\x12X\n" +
 	"\fRegisterUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12O\n" +
 	"\vGetPassHash\x12\x1f.mrechkunov.goKeeper.proto.User\x1a\x1f.mrechkunov.goKeeper.proto.User\x12\\\n" +
@@ -418,55 +418,58 @@ const file_gokeeper_proto_rawDesc = "" +
 	"\bEditUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a\x1f.mrechkunov.goKeeper.proto.User\x12V\n" +
 	"\n" +
 	"DeleteUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12`\n" +
-	"\fSavePassword\x12'.mrechkunov.goKeeper.proto.PasswordData\x1a'.mrechkunov.goKeeper.proto.EmptyMessageB*Z(github.com/mrechkunov/goKeeper.git/protob\beditionsp\xe8\a"
+	"\fSavePassword\x12'.mrechkunov.goKeeper.proto.PasswordData\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12[\n" +
+	"\aGetPass\x12'.mrechkunov.goKeeper.proto.PasswordData\x1a'.mrechkunov.goKeeper.proto.PasswordDataB*Z(github.com/mrechkunov/goKeeper.git/protob\beditionsp\xe8\a"
 
-var file_gokeeper_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_gokeeper_proto_goTypes = []any{
+var file_proto_gokeeper_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_proto_gokeeper_proto_goTypes = []any{
 	(*User)(nil),           // 0: mrechkunov.goKeeper.proto.User
 	(*EmptyMessage)(nil),   // 1: mrechkunov.goKeeper.proto.EmptyMessage
 	(*PasswordData)(nil),   // 2: mrechkunov.goKeeper.proto.PasswordData
 	(*StatusResponce)(nil), // 3: mrechkunov.goKeeper.proto.StatusResponce
 }
-var file_gokeeper_proto_depIdxs = []int32{
+var file_proto_gokeeper_proto_depIdxs = []int32{
 	0, // 0: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:input_type -> mrechkunov.goKeeper.proto.User
 	0, // 1: mrechkunov.goKeeper.proto.GoKeeper.GetPassHash:input_type -> mrechkunov.goKeeper.proto.User
 	0, // 2: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:input_type -> mrechkunov.goKeeper.proto.User
 	0, // 3: mrechkunov.goKeeper.proto.GoKeeper.EditUser:input_type -> mrechkunov.goKeeper.proto.User
 	0, // 4: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:input_type -> mrechkunov.goKeeper.proto.User
 	2, // 5: mrechkunov.goKeeper.proto.GoKeeper.SavePassword:input_type -> mrechkunov.goKeeper.proto.PasswordData
-	1, // 6: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
-	0, // 7: mrechkunov.goKeeper.proto.GoKeeper.GetPassHash:output_type -> mrechkunov.goKeeper.proto.User
-	1, // 8: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
-	0, // 9: mrechkunov.goKeeper.proto.GoKeeper.EditUser:output_type -> mrechkunov.goKeeper.proto.User
-	1, // 10: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
-	1, // 11: mrechkunov.goKeeper.proto.GoKeeper.SavePassword:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
-	6, // [6:12] is the sub-list for method output_type
-	0, // [0:6] is the sub-list for method input_type
+	2, // 6: mrechkunov.goKeeper.proto.GoKeeper.GetPass:input_type -> mrechkunov.goKeeper.proto.PasswordData
+	1, // 7: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	0, // 8: mrechkunov.goKeeper.proto.GoKeeper.GetPassHash:output_type -> mrechkunov.goKeeper.proto.User
+	1, // 9: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	0, // 10: mrechkunov.goKeeper.proto.GoKeeper.EditUser:output_type -> mrechkunov.goKeeper.proto.User
+	1, // 11: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	1, // 12: mrechkunov.goKeeper.proto.GoKeeper.SavePassword:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	2, // 13: mrechkunov.goKeeper.proto.GoKeeper.GetPass:output_type -> mrechkunov.goKeeper.proto.PasswordData
+	7, // [7:14] is the sub-list for method output_type
+	0, // [0:7] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_gokeeper_proto_init() }
-func file_gokeeper_proto_init() {
-	if File_gokeeper_proto != nil {
+func init() { file_proto_gokeeper_proto_init() }
+func file_proto_gokeeper_proto_init() {
+	if File_proto_gokeeper_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_gokeeper_proto_rawDesc), len(file_gokeeper_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_gokeeper_proto_rawDesc), len(file_proto_gokeeper_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_gokeeper_proto_goTypes,
-		DependencyIndexes: file_gokeeper_proto_depIdxs,
-		MessageInfos:      file_gokeeper_proto_msgTypes,
+		GoTypes:           file_proto_gokeeper_proto_goTypes,
+		DependencyIndexes: file_proto_gokeeper_proto_depIdxs,
+		MessageInfos:      file_proto_gokeeper_proto_msgTypes,
 	}.Build()
-	File_gokeeper_proto = out.File
-	file_gokeeper_proto_goTypes = nil
-	file_gokeeper_proto_depIdxs = nil
+	File_proto_gokeeper_proto = out.File
+	file_proto_gokeeper_proto_goTypes = nil
+	file_proto_gokeeper_proto_depIdxs = nil
 }

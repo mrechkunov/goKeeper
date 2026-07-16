@@ -35,7 +35,6 @@ func GenerateToken(uLogin string) (string, error) {
 
 // ValidateToken validate token signature
 func ValidateToken(tokenString string) error {
-	fmt.Println("token in validate func:", tokenString)
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		return []byte(secretKey), nil
 	})

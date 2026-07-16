@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.2
 // - protoc             v7.35.1
-// source: gokeeper.proto
+// source: proto/gokeeper.proto
 
 package proto
 
@@ -25,6 +25,7 @@ const (
 	GoKeeper_EditUser_FullMethodName         = "/mrechkunov.goKeeper.proto.GoKeeper/EditUser"
 	GoKeeper_DeleteUser_FullMethodName       = "/mrechkunov.goKeeper.proto.GoKeeper/DeleteUser"
 	GoKeeper_SavePassword_FullMethodName     = "/mrechkunov.goKeeper.proto.GoKeeper/SavePassword"
+	GoKeeper_GetPass_FullMethodName          = "/mrechkunov.goKeeper.proto.GoKeeper/GetPass"
 )
 
 // GoKeeperClient is the client API for GoKeeper service.
@@ -37,6 +38,7 @@ type GoKeeperClient interface {
 	EditUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
 	DeleteUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*EmptyMessage, error)
 	SavePassword(ctx context.Context, in *PasswordData, opts ...grpc.CallOption) (*EmptyMessage, error)
+	GetPass(ctx context.Context, in *PasswordData, opts ...grpc.CallOption) (*PasswordData, error)
 }
 
 type goKeeperClient struct {
@@ -107,6 +109,16 @@ func (c *goKeeperClient) SavePassword(ctx context.Context, in *PasswordData, opt
 	return out, nil
 }
 
+func (c *goKeeperClient) GetPass(ctx context.Context, in *PasswordData, opts ...grpc.CallOption) (*PasswordData, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PasswordData)
+	err := c.cc.Invoke(ctx, GoKeeper_GetPass_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GoKeeperServer is the server API for GoKeeper service.
 // All implementations must embed UnimplementedGoKeeperServer
 // for forward compatibility.
@@ -117,6 +129,7 @@ type GoKeeperServer interface {
 	EditUser(context.Context, *User) (*User, error)
 	DeleteUser(context.Context, *User) (*EmptyMessage, error)
 	SavePassword(context.Context, *PasswordData) (*EmptyMessage, error)
+	GetPass(context.Context, *PasswordData) (*PasswordData, error)
 	mustEmbedUnimplementedGoKeeperServer()
 }
 
@@ -144,6 +157,9 @@ func (UnimplementedGoKeeperServer) DeleteUser(context.Context, *User) (*EmptyMes
 }
 func (UnimplementedGoKeeperServer) SavePassword(context.Context, *PasswordData) (*EmptyMessage, error) {
 	return nil, status.Error(codes.Unimplemented, "method SavePassword not implemented")
+}
+func (UnimplementedGoKeeperServer) GetPass(context.Context, *PasswordData) (*PasswordData, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetPass not implemented")
 }
 func (UnimplementedGoKeeperServer) mustEmbedUnimplementedGoKeeperServer() {}
 func (UnimplementedGoKeeperServer) testEmbeddedByValue()                  {}
@@ -274,6 +290,24 @@ func _GoKeeper_SavePassword_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GoKeeper_GetPass_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PasswordData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).GetPass(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_GetPass_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).GetPass(ctx, req.(*PasswordData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GoKeeper_ServiceDesc is the grpc.ServiceDesc for GoKeeper service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -305,7 +339,11 @@ var GoKeeper_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "SavePassword",
 			Handler:    _GoKeeper_SavePassword_Handler,
 		},
+		{
+			MethodName: "GetPass",
+			Handler:    _GoKeeper_GetPass_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "gokeeper.proto",
+	Metadata: "proto/gokeeper.proto",
 }

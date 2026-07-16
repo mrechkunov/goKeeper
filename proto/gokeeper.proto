@@ -11,6 +11,7 @@ service GoKeeper {
   rpc EditUser (User) returns (User); // change password
   rpc DeleteUser (User) returns (EmptyMessage);
   rpc SavePassword (PasswordData) returns (EmptyMessage);
+  rpc GetPass (PasswordData) returns (PasswordData);
 }
 
 message User {

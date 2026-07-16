@@ -44,7 +44,7 @@ func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *p
 	}
 	// Создаем исходящие метаданные для заголовков (headers)
 	headerMD := metadata.Pairs(
-		"authorization", token, //"Bearer "+token,
+		"authorization", token,
 	)
 	// Отправляем заголовки клиенту
 	grpc.SetHeader(ctx, headerMD)
@@ -66,7 +66,7 @@ func (gk *GoKeeperServer) AuthenticateUser(ctx context.Context, in *pb.User) (ou
 	}
 	// Создаем исходящие метаданные для заголовков (headers)
 	headerMD := metadata.Pairs(
-		"authorization", "Bearer "+token,
+		"authorization", token,
 	)
 	// Отправляем заголовки клиенту
 	grpc.SetHeader(ctx, headerMD)
@@ -120,5 +120,18 @@ func (gk *GoKeeperServer) SavePassword(ctx context.Context, in *pb.PasswordData)
 	if err = AddData(ctx, data); err != nil {
 		return out, status.Error(codes.Internal, "server error pass not saved")
 	}
+	return out, nil
+}
+
+func (gk *GoKeeperServer) GetPass(ctx context.Context, in *pb.PasswordData) (out *pb.PasswordData, err error) {
+	data, err := GetData(ctx, in.GetLogin(), in.GetMetadata())
+	if err != nil {
+		logger.Log.Warnln("error while get pass", err)
+	}
+	out = pb.PasswordData_builder{
+		Login:    &data.Login,
+		Pair:     &data.Pair,
+		Metadata: &data.Metadata,
+	}.Build()
 	return out, nil
 }

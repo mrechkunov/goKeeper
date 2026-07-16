@@ -6,7 +6,6 @@ import (
 	"log"
 	"sync"
 
-	"github.com/mrechkunov/goKeeper.git/internal/auth"
 	"github.com/mrechkunov/goKeeper.git/internal/cryptodata"
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	"github.com/mrechkunov/goKeeper.git/internal/model"
@@ -86,21 +85,23 @@ func main() {
 	defer conn.Close()
 	//Создаем клиента для сервиса
 	client := pb.NewGoKeeperClient(conn)
-	fmt.Println("--------------Register user----------")
+
+	fmt.Println("--------------Authenticate user----------")
 	user := model.Users{
 		Login:        "ivan",
 		PasswordHash: "pass",
 	}
-	token, err := service.RegisterUser(context.Background(), client, user)
+	token, err := service.AuthenticateUser(context.Background(), client, user)
 	if err != nil {
 		logger.Log.Warnln(err)
 	}
 	tokenMgr.UpdateToken(token)
+	fmt.Println("token", token)
+	login := user.Login
 
-	login, err := auth.GetLoginByToken(perRPC.tokenManager.GetToken())
-	loginToSave := "test1"
-	passToSave := "test3"
-	metaToSave := "yandex.ru"
+	loginToSave := "testwewe"
+	passToSave := "test435"
+	metaToSave := "yandesdsdwewew3x.ru/test"
 	pair, err := cryptodata.CryptoPair(loginToSave, passToSave)
 	if err != nil {
 		logger.Log.Infoln(err)
@@ -110,5 +111,25 @@ func main() {
 		Pair:     pair,
 		Metadata: metaToSave,
 	}
-	service.SavePass(context.Background(), client, passwordToSave)
+
+	err = service.SavePass(context.Background(), client, passwordToSave)
+	if err != nil {
+		fmt.Println("save error:", err)
+	}
+
+	dataToGet := model.Passwords{
+		Login:    passwordToSave.Login,
+		Metadata: passwordToSave.Metadata,
+	}
+	data, err := service.GetPass(context.Background(), client, dataToGet)
+	if err != nil {
+		fmt.Println("get error:", err)
+	}
+	//fmt.Println(data)
+
+	getLogin, getPass, err := cryptodata.DecryptPair(data.Pair)
+	fmt.Println("ulogin: ", data.Login)
+	fmt.Println("metadata: ", data.Metadata)
+	fmt.Println("login: ", getLogin)
+	fmt.Println("pass: ", getPass)
 }
