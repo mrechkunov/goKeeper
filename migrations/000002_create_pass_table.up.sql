@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS passwords (
     p_login VARCHAR(255) NOT NULL,
     p_pair VARCHAR(255) NOT NULL,
     p_metadata VARCHAR(255) NOT NULL,
-    PRIMARY KEY (p_login, p_metadata)
+    PRIMARY KEY (p_pair, p_metadata)
 );
 
 -- Базовый индекс для поиска по login

@@ -88,7 +88,7 @@ func main() {
 
 	fmt.Println("--------------Authenticate user----------")
 	user := model.Users{
-		Login:        "ivan",
+		Login:        "michael",
 		PasswordHash: "pass",
 	}
 	token, err := service.AuthenticateUser(context.Background(), client, user)
@@ -99,9 +99,9 @@ func main() {
 	fmt.Println("token", token)
 	login := user.Login
 
-	loginToSave := "testwewe"
-	passToSave := "test435"
-	metaToSave := "yandesdsdwewew3x.ru/test"
+	loginToSave := "testwwe"
+	passToSave := "testsds435"
+	metaToSave := "ewewew.ru/test"
 	pair, err := cryptodata.CryptoPair(loginToSave, passToSave)
 	if err != nil {
 		logger.Log.Infoln(err)
