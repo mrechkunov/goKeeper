@@ -21,16 +21,5 @@ func SavePass(ctx context.Context, client pb.GoKeeperClient, pass model.Password
 	return nil
 }
 
-// var userPb pb.User
-// userPb.SetLogin(user.Login)
-// userPb.SetPasswordHash(user.PasswordHash)
-// var header metadata.MD
-// _, err = client.RegisterUser(ctx, &userPb, grpc.Header(&header))
-// if err != nil {
-// 	logger.Log.Errorln("error while register user: ", err)
-// 	return "", err
-// }
-// if vals := header.Get("authorization"); len(vals) > 0 {
-// 	token = vals[0]
-// }
-// return token, nil
+// edit pass
+// delete pass
