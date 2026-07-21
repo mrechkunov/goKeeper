@@ -6,10 +6,10 @@ import (
 	"log"
 	"sync"
 
-	"github.com/mrechkunov/goKeeper.git/internal/cryptodata"
+	"github.com/mrechkunov/goKeeper.git/internal/auth"
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	"github.com/mrechkunov/goKeeper.git/internal/model"
-	"github.com/mrechkunov/goKeeper.git/internal/service"
+	cliservice "github.com/mrechkunov/goKeeper.git/internal/service/client"
 	pb "github.com/mrechkunov/goKeeper.git/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -91,45 +91,65 @@ func main() {
 		Login:        "michael",
 		PasswordHash: "pass",
 	}
-	token, err := service.AuthenticateUser(context.Background(), client, user)
+	token, err := cliservice.AuthenticateUser(context.Background(), client, user)
 	if err != nil {
 		logger.Log.Warnln(err)
 	}
 	tokenMgr.UpdateToken(token)
 	fmt.Println("token", token)
-	login := user.Login
+	fmt.Println("--------------Authenticate user done----------")
+	fmt.Println("--------------Safe pass----------")
 
-	loginToSave := "testwwe"
-	passToSave := "testsds435"
-	metaToSave := "ewewew.ru/test"
-	pair, err := cryptodata.CryptoPair(loginToSave, passToSave)
+	login, err := auth.GetLoginByToken(token)
 	if err != nil {
-		logger.Log.Infoln(err)
+		logger.Log.Warnln("error while get login by token", err)
 	}
 	passwordToSave := model.Passwords{
-		Login:    login,
-		Pair:     pair,
-		Metadata: metaToSave,
+		UserLogin:      login,
+		MetaData:       "eweeeeererwew.ru/test",
+		LoginToSave:    "testwwe",
+		PasswordToSave: "tests3434ds435",
 	}
-
-	err = service.SavePass(context.Background(), client, passwordToSave)
+	err = cliservice.SavePass(context.Background(), client, passwordToSave)
 	if err != nil {
 		fmt.Println("save error:", err)
 	}
-
+	fmt.Println("--------------Save Pass Done----------")
+	fmt.Println("--------------Get Pass----------")
 	dataToGet := model.Passwords{
-		Login:    passwordToSave.Login,
-		Metadata: passwordToSave.Metadata,
+		UserLogin: passwordToSave.UserLogin,
+		MetaData:  passwordToSave.MetaData,
 	}
-	data, err := service.GetPass(context.Background(), client, dataToGet)
+	data, err := cliservice.GetPass(context.Background(), client, dataToGet)
 	if err != nil {
 		fmt.Println("get error:", err)
 	}
-	//fmt.Println(data)
-
-	getLogin, getPass, err := cryptodata.DecryptPair(data.Pair)
-	fmt.Println("ulogin: ", data.Login)
-	fmt.Println("metadata: ", data.Metadata)
-	fmt.Println("login: ", getLogin)
-	fmt.Println("pass: ", getPass)
+	fmt.Println("ulogin: ", data.UserLogin)
+	fmt.Println("metadata: ", data.MetaData)
+	fmt.Println("login: ", data.LoginToSave)
+	fmt.Println("pass: ", data.PasswordToSave)
+	fmt.Println("--------------Get Pass Done----------")
+	fmt.Println("--------------Edit Pass ----------")
+	passwordToedit := model.Passwords{
+		UserLogin:      login,
+		MetaData:       "eweeeeererwew.ru/test",
+		LoginToSave:    "testwwe",
+		PasswordToSave: "EditedPass",
+	}
+	err = cliservice.EditPass(context.Background(), client, passwordToedit)
+	if err != nil {
+		fmt.Println("edit error:", err)
+	}
+	dataToGetAfterEdit := model.Passwords{
+		UserLogin: passwordToedit.UserLogin,
+		MetaData:  passwordToedit.MetaData,
+	}
+	data, err = cliservice.GetPass(context.Background(), client, dataToGetAfterEdit)
+	if err != nil {
+		fmt.Println("get error:", err)
+	}
+	fmt.Println("ulogin: ", data.UserLogin)
+	fmt.Println("metadata: ", data.MetaData)
+	fmt.Println("login: ", data.LoginToSave)
+	fmt.Println("pass: ", data.PasswordToSave)
 }

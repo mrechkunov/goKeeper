@@ -1,7 +1,9 @@
 package model
 
 type Passwords struct {
-	Login    string
-	Pair     string
-	Metadata string
+	UserLogin      string
+	Pair           string
+	MetaData       string
+	LoginToSave    string
+	PasswordToSave string
 }

@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.2
 // - protoc             v7.35.1
-// source: proto/gokeeper.proto
+// source: gokeeper.proto
 
 package proto
 
@@ -19,26 +19,46 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	GoKeeper_RegisterUser_FullMethodName     = "/mrechkunov.goKeeper.proto.GoKeeper/RegisterUser"
 	GoKeeper_GetPassHash_FullMethodName      = "/mrechkunov.goKeeper.proto.GoKeeper/GetPassHash"
+	GoKeeper_RegisterUser_FullMethodName     = "/mrechkunov.goKeeper.proto.GoKeeper/RegisterUser"
 	GoKeeper_AuthenticateUser_FullMethodName = "/mrechkunov.goKeeper.proto.GoKeeper/AuthenticateUser"
 	GoKeeper_EditUser_FullMethodName         = "/mrechkunov.goKeeper.proto.GoKeeper/EditUser"
 	GoKeeper_DeleteUser_FullMethodName       = "/mrechkunov.goKeeper.proto.GoKeeper/DeleteUser"
 	GoKeeper_SavePassword_FullMethodName     = "/mrechkunov.goKeeper.proto.GoKeeper/SavePassword"
-	GoKeeper_GetPass_FullMethodName          = "/mrechkunov.goKeeper.proto.GoKeeper/GetPass"
+	GoKeeper_GetPassword_FullMethodName      = "/mrechkunov.goKeeper.proto.GoKeeper/GetPassword"
+	GoKeeper_EditPassword_FullMethodName     = "/mrechkunov.goKeeper.proto.GoKeeper/EditPassword"
+	GoKeeper_DeletePassword_FullMethodName   = "/mrechkunov.goKeeper.proto.GoKeeper/DeletePassword"
+	GoKeeper_SaveCard_FullMethodName         = "/mrechkunov.goKeeper.proto.GoKeeper/SaveCard"
+	GoKeeper_GetCard_FullMethodName          = "/mrechkunov.goKeeper.proto.GoKeeper/GetCard"
+	GoKeeper_EditCard_FullMethodName         = "/mrechkunov.goKeeper.proto.GoKeeper/EditCard"
+	GoKeeper_DeleteCard_FullMethodName       = "/mrechkunov.goKeeper.proto.GoKeeper/DeleteCard"
+	GoKeeper_SaveFile_FullMethodName         = "/mrechkunov.goKeeper.proto.GoKeeper/SaveFile"
+	GoKeeper_GetFile_FullMethodName          = "/mrechkunov.goKeeper.proto.GoKeeper/GetFile"
+	GoKeeper_EditFile_FullMethodName         = "/mrechkunov.goKeeper.proto.GoKeeper/EditFile"
+	GoKeeper_DeleteFile_FullMethodName       = "/mrechkunov.goKeeper.proto.GoKeeper/DeleteFile"
 )
 
 // GoKeeperClient is the client API for GoKeeper service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GoKeeperClient interface {
-	RegisterUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*EmptyMessage, error)
 	GetPassHash(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
+	RegisterUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*EmptyMessage, error)
 	AuthenticateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*EmptyMessage, error)
 	EditUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
 	DeleteUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*EmptyMessage, error)
 	SavePassword(ctx context.Context, in *PasswordData, opts ...grpc.CallOption) (*EmptyMessage, error)
-	GetPass(ctx context.Context, in *PasswordData, opts ...grpc.CallOption) (*PasswordData, error)
+	GetPassword(ctx context.Context, in *PasswordData, opts ...grpc.CallOption) (*PasswordData, error)
+	EditPassword(ctx context.Context, in *PasswordData, opts ...grpc.CallOption) (*EmptyMessage, error)
+	DeletePassword(ctx context.Context, in *PasswordData, opts ...grpc.CallOption) (*EmptyMessage, error)
+	SaveCard(ctx context.Context, in *CardData, opts ...grpc.CallOption) (*EmptyMessage, error)
+	GetCard(ctx context.Context, in *CardData, opts ...grpc.CallOption) (*CardData, error)
+	EditCard(ctx context.Context, in *CardData, opts ...grpc.CallOption) (*EmptyMessage, error)
+	DeleteCard(ctx context.Context, in *CardData, opts ...grpc.CallOption) (*EmptyMessage, error)
+	SaveFile(ctx context.Context, in *FileData, opts ...grpc.CallOption) (*EmptyMessage, error)
+	GetFile(ctx context.Context, in *FileData, opts ...grpc.CallOption) (*FileData, error)
+	EditFile(ctx context.Context, in *FileData, opts ...grpc.CallOption) (*EmptyMessage, error)
+	DeleteFile(ctx context.Context, in *FileData, opts ...grpc.CallOption) (*EmptyMessage, error)
 }
 
 type goKeeperClient struct {
@@ -49,20 +69,20 @@ func NewGoKeeperClient(cc grpc.ClientConnInterface) GoKeeperClient {
 	return &goKeeperClient{cc}
 }
 
-func (c *goKeeperClient) RegisterUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*EmptyMessage, error) {
+func (c *goKeeperClient) GetPassHash(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(EmptyMessage)
-	err := c.cc.Invoke(ctx, GoKeeper_RegisterUser_FullMethodName, in, out, cOpts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, GoKeeper_GetPassHash_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *goKeeperClient) GetPassHash(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error) {
+func (c *goKeeperClient) RegisterUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*EmptyMessage, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(User)
-	err := c.cc.Invoke(ctx, GoKeeper_GetPassHash_FullMethodName, in, out, cOpts...)
+	out := new(EmptyMessage)
+	err := c.cc.Invoke(ctx, GoKeeper_RegisterUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -109,10 +129,110 @@ func (c *goKeeperClient) SavePassword(ctx context.Context, in *PasswordData, opt
 	return out, nil
 }
 
-func (c *goKeeperClient) GetPass(ctx context.Context, in *PasswordData, opts ...grpc.CallOption) (*PasswordData, error) {
+func (c *goKeeperClient) GetPassword(ctx context.Context, in *PasswordData, opts ...grpc.CallOption) (*PasswordData, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PasswordData)
-	err := c.cc.Invoke(ctx, GoKeeper_GetPass_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, GoKeeper_GetPassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goKeeperClient) EditPassword(ctx context.Context, in *PasswordData, opts ...grpc.CallOption) (*EmptyMessage, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyMessage)
+	err := c.cc.Invoke(ctx, GoKeeper_EditPassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goKeeperClient) DeletePassword(ctx context.Context, in *PasswordData, opts ...grpc.CallOption) (*EmptyMessage, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyMessage)
+	err := c.cc.Invoke(ctx, GoKeeper_DeletePassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goKeeperClient) SaveCard(ctx context.Context, in *CardData, opts ...grpc.CallOption) (*EmptyMessage, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyMessage)
+	err := c.cc.Invoke(ctx, GoKeeper_SaveCard_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goKeeperClient) GetCard(ctx context.Context, in *CardData, opts ...grpc.CallOption) (*CardData, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CardData)
+	err := c.cc.Invoke(ctx, GoKeeper_GetCard_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goKeeperClient) EditCard(ctx context.Context, in *CardData, opts ...grpc.CallOption) (*EmptyMessage, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyMessage)
+	err := c.cc.Invoke(ctx, GoKeeper_EditCard_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goKeeperClient) DeleteCard(ctx context.Context, in *CardData, opts ...grpc.CallOption) (*EmptyMessage, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyMessage)
+	err := c.cc.Invoke(ctx, GoKeeper_DeleteCard_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goKeeperClient) SaveFile(ctx context.Context, in *FileData, opts ...grpc.CallOption) (*EmptyMessage, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyMessage)
+	err := c.cc.Invoke(ctx, GoKeeper_SaveFile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goKeeperClient) GetFile(ctx context.Context, in *FileData, opts ...grpc.CallOption) (*FileData, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FileData)
+	err := c.cc.Invoke(ctx, GoKeeper_GetFile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goKeeperClient) EditFile(ctx context.Context, in *FileData, opts ...grpc.CallOption) (*EmptyMessage, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyMessage)
+	err := c.cc.Invoke(ctx, GoKeeper_EditFile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goKeeperClient) DeleteFile(ctx context.Context, in *FileData, opts ...grpc.CallOption) (*EmptyMessage, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyMessage)
+	err := c.cc.Invoke(ctx, GoKeeper_DeleteFile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -123,13 +243,23 @@ func (c *goKeeperClient) GetPass(ctx context.Context, in *PasswordData, opts ...
 // All implementations must embed UnimplementedGoKeeperServer
 // for forward compatibility.
 type GoKeeperServer interface {
-	RegisterUser(context.Context, *User) (*EmptyMessage, error)
 	GetPassHash(context.Context, *User) (*User, error)
+	RegisterUser(context.Context, *User) (*EmptyMessage, error)
 	AuthenticateUser(context.Context, *User) (*EmptyMessage, error)
 	EditUser(context.Context, *User) (*User, error)
 	DeleteUser(context.Context, *User) (*EmptyMessage, error)
 	SavePassword(context.Context, *PasswordData) (*EmptyMessage, error)
-	GetPass(context.Context, *PasswordData) (*PasswordData, error)
+	GetPassword(context.Context, *PasswordData) (*PasswordData, error)
+	EditPassword(context.Context, *PasswordData) (*EmptyMessage, error)
+	DeletePassword(context.Context, *PasswordData) (*EmptyMessage, error)
+	SaveCard(context.Context, *CardData) (*EmptyMessage, error)
+	GetCard(context.Context, *CardData) (*CardData, error)
+	EditCard(context.Context, *CardData) (*EmptyMessage, error)
+	DeleteCard(context.Context, *CardData) (*EmptyMessage, error)
+	SaveFile(context.Context, *FileData) (*EmptyMessage, error)
+	GetFile(context.Context, *FileData) (*FileData, error)
+	EditFile(context.Context, *FileData) (*EmptyMessage, error)
+	DeleteFile(context.Context, *FileData) (*EmptyMessage, error)
 	mustEmbedUnimplementedGoKeeperServer()
 }
 
@@ -140,11 +270,11 @@ type GoKeeperServer interface {
 // pointer dereference when methods are called.
 type UnimplementedGoKeeperServer struct{}
 
-func (UnimplementedGoKeeperServer) RegisterUser(context.Context, *User) (*EmptyMessage, error) {
-	return nil, status.Error(codes.Unimplemented, "method RegisterUser not implemented")
-}
 func (UnimplementedGoKeeperServer) GetPassHash(context.Context, *User) (*User, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetPassHash not implemented")
+}
+func (UnimplementedGoKeeperServer) RegisterUser(context.Context, *User) (*EmptyMessage, error) {
+	return nil, status.Error(codes.Unimplemented, "method RegisterUser not implemented")
 }
 func (UnimplementedGoKeeperServer) AuthenticateUser(context.Context, *User) (*EmptyMessage, error) {
 	return nil, status.Error(codes.Unimplemented, "method AuthenticateUser not implemented")
@@ -158,8 +288,38 @@ func (UnimplementedGoKeeperServer) DeleteUser(context.Context, *User) (*EmptyMes
 func (UnimplementedGoKeeperServer) SavePassword(context.Context, *PasswordData) (*EmptyMessage, error) {
 	return nil, status.Error(codes.Unimplemented, "method SavePassword not implemented")
 }
-func (UnimplementedGoKeeperServer) GetPass(context.Context, *PasswordData) (*PasswordData, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetPass not implemented")
+func (UnimplementedGoKeeperServer) GetPassword(context.Context, *PasswordData) (*PasswordData, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetPassword not implemented")
+}
+func (UnimplementedGoKeeperServer) EditPassword(context.Context, *PasswordData) (*EmptyMessage, error) {
+	return nil, status.Error(codes.Unimplemented, "method EditPassword not implemented")
+}
+func (UnimplementedGoKeeperServer) DeletePassword(context.Context, *PasswordData) (*EmptyMessage, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeletePassword not implemented")
+}
+func (UnimplementedGoKeeperServer) SaveCard(context.Context, *CardData) (*EmptyMessage, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveCard not implemented")
+}
+func (UnimplementedGoKeeperServer) GetCard(context.Context, *CardData) (*CardData, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetCard not implemented")
+}
+func (UnimplementedGoKeeperServer) EditCard(context.Context, *CardData) (*EmptyMessage, error) {
+	return nil, status.Error(codes.Unimplemented, "method EditCard not implemented")
+}
+func (UnimplementedGoKeeperServer) DeleteCard(context.Context, *CardData) (*EmptyMessage, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteCard not implemented")
+}
+func (UnimplementedGoKeeperServer) SaveFile(context.Context, *FileData) (*EmptyMessage, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveFile not implemented")
+}
+func (UnimplementedGoKeeperServer) GetFile(context.Context, *FileData) (*FileData, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetFile not implemented")
+}
+func (UnimplementedGoKeeperServer) EditFile(context.Context, *FileData) (*EmptyMessage, error) {
+	return nil, status.Error(codes.Unimplemented, "method EditFile not implemented")
+}
+func (UnimplementedGoKeeperServer) DeleteFile(context.Context, *FileData) (*EmptyMessage, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteFile not implemented")
 }
 func (UnimplementedGoKeeperServer) mustEmbedUnimplementedGoKeeperServer() {}
 func (UnimplementedGoKeeperServer) testEmbeddedByValue()                  {}
@@ -182,24 +342,6 @@ func RegisterGoKeeperServer(s grpc.ServiceRegistrar, srv GoKeeperServer) {
 	s.RegisterService(&GoKeeper_ServiceDesc, srv)
 }
 
-func _GoKeeper_RegisterUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(User)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GoKeeperServer).RegisterUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: GoKeeper_RegisterUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoKeeperServer).RegisterUser(ctx, req.(*User))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _GoKeeper_GetPassHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(User)
 	if err := dec(in); err != nil {
@@ -214,6 +356,24 @@ func _GoKeeper_GetPassHash_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GoKeeperServer).GetPassHash(ctx, req.(*User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GoKeeper_RegisterUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).RegisterUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_RegisterUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).RegisterUser(ctx, req.(*User))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -290,20 +450,200 @@ func _GoKeeper_SavePassword_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GoKeeper_GetPass_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GoKeeper_GetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PasswordData)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GoKeeperServer).GetPass(ctx, in)
+		return srv.(GoKeeperServer).GetPassword(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GoKeeper_GetPass_FullMethodName,
+		FullMethod: GoKeeper_GetPassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoKeeperServer).GetPass(ctx, req.(*PasswordData))
+		return srv.(GoKeeperServer).GetPassword(ctx, req.(*PasswordData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GoKeeper_EditPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PasswordData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).EditPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_EditPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).EditPassword(ctx, req.(*PasswordData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GoKeeper_DeletePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PasswordData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).DeletePassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_DeletePassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).DeletePassword(ctx, req.(*PasswordData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GoKeeper_SaveCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CardData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).SaveCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_SaveCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).SaveCard(ctx, req.(*CardData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GoKeeper_GetCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CardData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).GetCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_GetCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).GetCard(ctx, req.(*CardData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GoKeeper_EditCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CardData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).EditCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_EditCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).EditCard(ctx, req.(*CardData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GoKeeper_DeleteCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CardData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).DeleteCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_DeleteCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).DeleteCard(ctx, req.(*CardData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GoKeeper_SaveFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FileData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).SaveFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_SaveFile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).SaveFile(ctx, req.(*FileData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GoKeeper_GetFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FileData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).GetFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_GetFile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).GetFile(ctx, req.(*FileData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GoKeeper_EditFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FileData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).EditFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_EditFile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).EditFile(ctx, req.(*FileData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GoKeeper_DeleteFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FileData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoKeeperServer).DeleteFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoKeeper_DeleteFile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoKeeperServer).DeleteFile(ctx, req.(*FileData))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -316,12 +656,12 @@ var GoKeeper_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*GoKeeperServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "RegisterUser",
-			Handler:    _GoKeeper_RegisterUser_Handler,
-		},
-		{
 			MethodName: "GetPassHash",
 			Handler:    _GoKeeper_GetPassHash_Handler,
+		},
+		{
+			MethodName: "RegisterUser",
+			Handler:    _GoKeeper_RegisterUser_Handler,
 		},
 		{
 			MethodName: "AuthenticateUser",
@@ -340,10 +680,50 @@ var GoKeeper_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _GoKeeper_SavePassword_Handler,
 		},
 		{
-			MethodName: "GetPass",
-			Handler:    _GoKeeper_GetPass_Handler,
+			MethodName: "GetPassword",
+			Handler:    _GoKeeper_GetPassword_Handler,
+		},
+		{
+			MethodName: "EditPassword",
+			Handler:    _GoKeeper_EditPassword_Handler,
+		},
+		{
+			MethodName: "DeletePassword",
+			Handler:    _GoKeeper_DeletePassword_Handler,
+		},
+		{
+			MethodName: "SaveCard",
+			Handler:    _GoKeeper_SaveCard_Handler,
+		},
+		{
+			MethodName: "GetCard",
+			Handler:    _GoKeeper_GetCard_Handler,
+		},
+		{
+			MethodName: "EditCard",
+			Handler:    _GoKeeper_EditCard_Handler,
+		},
+		{
+			MethodName: "DeleteCard",
+			Handler:    _GoKeeper_DeleteCard_Handler,
+		},
+		{
+			MethodName: "SaveFile",
+			Handler:    _GoKeeper_SaveFile_Handler,
+		},
+		{
+			MethodName: "GetFile",
+			Handler:    _GoKeeper_GetFile_Handler,
+		},
+		{
+			MethodName: "EditFile",
+			Handler:    _GoKeeper_EditFile_Handler,
+		},
+		{
+			MethodName: "DeleteFile",
+			Handler:    _GoKeeper_DeleteFile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/gokeeper.proto",
+	Metadata: "gokeeper.proto",
 }

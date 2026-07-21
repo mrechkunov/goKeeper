@@ -89,8 +89,7 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 // проверяет номер карты по алгоритму Луна
-func ValidLuhnCardNumber(num *int64) bool {
-	number := strconv.FormatInt(*num, 10)
+func ValidLuhnCardNumber(number string) bool {
 	// убираем все пробелы в строке
 	number = strings.ReplaceAll(number, " ", "")
 	// проверяем что больше 2-х цифр
@@ -114,6 +113,6 @@ func ValidLuhnCardNumber(num *int64) bool {
 		}
 		sum += digit
 	}
-	// номер заказа валиден если сумма делится без остатка на 10
+	// номер карты валиден если сумма делится без остатка на 10
 	return sum%10 == 0
 }

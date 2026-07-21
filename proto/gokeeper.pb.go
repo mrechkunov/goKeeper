@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v7.35.1
-// source: proto/gokeeper.proto
+// source: gokeeper.proto
 
 package proto
 
@@ -20,6 +20,294 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type FileData struct {
+	state                  protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Filename    *string                `protobuf:"bytes,1,opt,name=filename"`
+	xxx_hidden_Metadata    *string                `protobuf:"bytes,2,opt,name=metadata"`
+	xxx_hidden_Cipherdata  []byte                 `protobuf:"bytes,3,opt,name=cipherdata"`
+	XXX_raceDetectHookData protoimpl.RaceDetectHookData
+	XXX_presence           [1]uint32
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
+}
+
+func (x *FileData) Reset() {
+	*x = FileData{}
+	mi := &file_gokeeper_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FileData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FileData) ProtoMessage() {}
+
+func (x *FileData) ProtoReflect() protoreflect.Message {
+	mi := &file_gokeeper_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *FileData) GetFilename() string {
+	if x != nil {
+		if x.xxx_hidden_Filename != nil {
+			return *x.xxx_hidden_Filename
+		}
+		return ""
+	}
+	return ""
+}
+
+func (x *FileData) GetMetadata() string {
+	if x != nil {
+		if x.xxx_hidden_Metadata != nil {
+			return *x.xxx_hidden_Metadata
+		}
+		return ""
+	}
+	return ""
+}
+
+func (x *FileData) GetCipherdata() []byte {
+	if x != nil {
+		return x.xxx_hidden_Cipherdata
+	}
+	return nil
+}
+
+func (x *FileData) SetFilename(v string) {
+	x.xxx_hidden_Filename = &v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 3)
+}
+
+func (x *FileData) SetMetadata(v string) {
+	x.xxx_hidden_Metadata = &v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 3)
+}
+
+func (x *FileData) SetCipherdata(v []byte) {
+	if v == nil {
+		v = []byte{}
+	}
+	x.xxx_hidden_Cipherdata = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 3)
+}
+
+func (x *FileData) HasFilename() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
+}
+
+func (x *FileData) HasMetadata() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 1)
+}
+
+func (x *FileData) HasCipherdata() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
+}
+
+func (x *FileData) ClearFilename() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
+	x.xxx_hidden_Filename = nil
+}
+
+func (x *FileData) ClearMetadata() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 1)
+	x.xxx_hidden_Metadata = nil
+}
+
+func (x *FileData) ClearCipherdata() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 2)
+	x.xxx_hidden_Cipherdata = nil
+}
+
+type FileData_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Filename   *string
+	Metadata   *string
+	Cipherdata []byte
+}
+
+func (b0 FileData_builder) Build() *FileData {
+	m0 := &FileData{}
+	b, x := &b0, m0
+	_, _ = b, x
+	if b.Filename != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 3)
+		x.xxx_hidden_Filename = b.Filename
+	}
+	if b.Metadata != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 3)
+		x.xxx_hidden_Metadata = b.Metadata
+	}
+	if b.Cipherdata != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 3)
+		x.xxx_hidden_Cipherdata = b.Cipherdata
+	}
+	return m0
+}
+
+type CardData struct {
+	state                  protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Login       *string                `protobuf:"bytes,1,opt,name=login"`
+	xxx_hidden_Cipherdata  *string                `protobuf:"bytes,2,opt,name=cipherdata"`
+	xxx_hidden_Metadata    *string                `protobuf:"bytes,3,opt,name=metadata"`
+	XXX_raceDetectHookData protoimpl.RaceDetectHookData
+	XXX_presence           [1]uint32
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
+}
+
+func (x *CardData) Reset() {
+	*x = CardData{}
+	mi := &file_gokeeper_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CardData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CardData) ProtoMessage() {}
+
+func (x *CardData) ProtoReflect() protoreflect.Message {
+	mi := &file_gokeeper_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *CardData) GetLogin() string {
+	if x != nil {
+		if x.xxx_hidden_Login != nil {
+			return *x.xxx_hidden_Login
+		}
+		return ""
+	}
+	return ""
+}
+
+func (x *CardData) GetCipherdata() string {
+	if x != nil {
+		if x.xxx_hidden_Cipherdata != nil {
+			return *x.xxx_hidden_Cipherdata
+		}
+		return ""
+	}
+	return ""
+}
+
+func (x *CardData) GetMetadata() string {
+	if x != nil {
+		if x.xxx_hidden_Metadata != nil {
+			return *x.xxx_hidden_Metadata
+		}
+		return ""
+	}
+	return ""
+}
+
+func (x *CardData) SetLogin(v string) {
+	x.xxx_hidden_Login = &v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 3)
+}
+
+func (x *CardData) SetCipherdata(v string) {
+	x.xxx_hidden_Cipherdata = &v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 3)
+}
+
+func (x *CardData) SetMetadata(v string) {
+	x.xxx_hidden_Metadata = &v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 3)
+}
+
+func (x *CardData) HasLogin() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
+}
+
+func (x *CardData) HasCipherdata() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 1)
+}
+
+func (x *CardData) HasMetadata() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
+}
+
+func (x *CardData) ClearLogin() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
+	x.xxx_hidden_Login = nil
+}
+
+func (x *CardData) ClearCipherdata() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 1)
+	x.xxx_hidden_Cipherdata = nil
+}
+
+func (x *CardData) ClearMetadata() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 2)
+	x.xxx_hidden_Metadata = nil
+}
+
+type CardData_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Login      *string
+	Cipherdata *string
+	Metadata   *string
+}
+
+func (b0 CardData_builder) Build() *CardData {
+	m0 := &CardData{}
+	b, x := &b0, m0
+	_, _ = b, x
+	if b.Login != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 3)
+		x.xxx_hidden_Login = b.Login
+	}
+	if b.Cipherdata != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 3)
+		x.xxx_hidden_Cipherdata = b.Cipherdata
+	}
+	if b.Metadata != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 3)
+		x.xxx_hidden_Metadata = b.Metadata
+	}
+	return m0
+}
+
 type User struct {
 	state                   protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Login        *string                `protobuf:"bytes,1,opt,name=login"`
@@ -32,7 +320,7 @@ type User struct {
 
 func (x *User) Reset() {
 	*x = User{}
-	mi := &file_proto_gokeeper_proto_msgTypes[0]
+	mi := &file_gokeeper_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +332,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_gokeeper_proto_msgTypes[0]
+	mi := &file_gokeeper_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -139,7 +427,7 @@ type EmptyMessage struct {
 
 func (x *EmptyMessage) Reset() {
 	*x = EmptyMessage{}
-	mi := &file_proto_gokeeper_proto_msgTypes[1]
+	mi := &file_gokeeper_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -151,7 +439,7 @@ func (x *EmptyMessage) String() string {
 func (*EmptyMessage) ProtoMessage() {}
 
 func (x *EmptyMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_gokeeper_proto_msgTypes[1]
+	mi := &file_gokeeper_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -187,7 +475,7 @@ type PasswordData struct {
 
 func (x *PasswordData) Reset() {
 	*x = PasswordData{}
-	mi := &file_proto_gokeeper_proto_msgTypes[2]
+	mi := &file_gokeeper_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -199,7 +487,7 @@ func (x *PasswordData) String() string {
 func (*PasswordData) ProtoMessage() {}
 
 func (x *PasswordData) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_gokeeper_proto_msgTypes[2]
+	mi := &file_gokeeper_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -329,7 +617,7 @@ type StatusResponce struct {
 
 func (x *StatusResponce) Reset() {
 	*x = StatusResponce{}
-	mi := &file_proto_gokeeper_proto_msgTypes[3]
+	mi := &file_gokeeper_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -341,7 +629,7 @@ func (x *StatusResponce) String() string {
 func (*StatusResponce) ProtoMessage() {}
 
 func (x *StatusResponce) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_gokeeper_proto_msgTypes[3]
+	mi := &file_gokeeper_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -396,11 +684,23 @@ func (b0 StatusResponce_builder) Build() *StatusResponce {
 	return m0
 }
 
-var File_proto_gokeeper_proto protoreflect.FileDescriptor
+var File_gokeeper_proto protoreflect.FileDescriptor
 
-const file_proto_gokeeper_proto_rawDesc = "" +
+const file_gokeeper_proto_rawDesc = "" +
 	"\n" +
-	"\x14proto/gokeeper.proto\x12\x19mrechkunov.goKeeper.proto\"@\n" +
+	"\x0egokeeper.proto\x12\x19mrechkunov.goKeeper.proto\"b\n" +
+	"\bFileData\x12\x1a\n" +
+	"\bfilename\x18\x01 \x01(\tR\bfilename\x12\x1a\n" +
+	"\bmetadata\x18\x02 \x01(\tR\bmetadata\x12\x1e\n" +
+	"\n" +
+	"cipherdata\x18\x03 \x01(\fR\n" +
+	"cipherdata\"\\\n" +
+	"\bCardData\x12\x14\n" +
+	"\x05login\x18\x01 \x01(\tR\x05login\x12\x1e\n" +
+	"\n" +
+	"cipherdata\x18\x02 \x01(\tR\n" +
+	"cipherdata\x12\x1a\n" +
+	"\bmetadata\x18\x03 \x01(\tR\bmetadata\"@\n" +
 	"\x04User\x12\x14\n" +
 	"\x05login\x18\x01 \x01(\tR\x05login\x12\"\n" +
 	"\fpasswordHash\x18\x02 \x01(\tR\fpasswordHash\"\x0e\n" +
@@ -410,66 +710,100 @@ const file_proto_gokeeper_proto_rawDesc = "" +
 	"\x04pair\x18\x02 \x01(\tR\x04pair\x12\x1a\n" +
 	"\bmetadata\x18\x03 \x01(\tR\bmetadata\"(\n" +
 	"\x0eStatusResponce\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\tR\x06result2\xf8\x04\n" +
-	"\bGoKeeper\x12X\n" +
-	"\fRegisterUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12O\n" +
-	"\vGetPassHash\x12\x1f.mrechkunov.goKeeper.proto.User\x1a\x1f.mrechkunov.goKeeper.proto.User\x12\\\n" +
+	"\x06result\x18\x01 \x01(\tR\x06result2\x8c\f\n" +
+	"\bGoKeeper\x12O\n" +
+	"\vGetPassHash\x12\x1f.mrechkunov.goKeeper.proto.User\x1a\x1f.mrechkunov.goKeeper.proto.User\x12X\n" +
+	"\fRegisterUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12\\\n" +
 	"\x10AuthenticateUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12L\n" +
 	"\bEditUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a\x1f.mrechkunov.goKeeper.proto.User\x12V\n" +
 	"\n" +
 	"DeleteUser\x12\x1f.mrechkunov.goKeeper.proto.User\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12`\n" +
-	"\fSavePassword\x12'.mrechkunov.goKeeper.proto.PasswordData\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12[\n" +
-	"\aGetPass\x12'.mrechkunov.goKeeper.proto.PasswordData\x1a'.mrechkunov.goKeeper.proto.PasswordDataB*Z(github.com/mrechkunov/goKeeper.git/protob\beditionsp\xe8\a"
+	"\fSavePassword\x12'.mrechkunov.goKeeper.proto.PasswordData\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12_\n" +
+	"\vGetPassword\x12'.mrechkunov.goKeeper.proto.PasswordData\x1a'.mrechkunov.goKeeper.proto.PasswordData\x12`\n" +
+	"\fEditPassword\x12'.mrechkunov.goKeeper.proto.PasswordData\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12b\n" +
+	"\x0eDeletePassword\x12'.mrechkunov.goKeeper.proto.PasswordData\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12X\n" +
+	"\bSaveCard\x12#.mrechkunov.goKeeper.proto.CardData\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12S\n" +
+	"\aGetCard\x12#.mrechkunov.goKeeper.proto.CardData\x1a#.mrechkunov.goKeeper.proto.CardData\x12X\n" +
+	"\bEditCard\x12#.mrechkunov.goKeeper.proto.CardData\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12Z\n" +
+	"\n" +
+	"DeleteCard\x12#.mrechkunov.goKeeper.proto.CardData\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12X\n" +
+	"\bSaveFile\x12#.mrechkunov.goKeeper.proto.FileData\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12S\n" +
+	"\aGetFile\x12#.mrechkunov.goKeeper.proto.FileData\x1a#.mrechkunov.goKeeper.proto.FileData\x12X\n" +
+	"\bEditFile\x12#.mrechkunov.goKeeper.proto.FileData\x1a'.mrechkunov.goKeeper.proto.EmptyMessage\x12Z\n" +
+	"\n" +
+	"DeleteFile\x12#.mrechkunov.goKeeper.proto.FileData\x1a'.mrechkunov.goKeeper.proto.EmptyMessageB*Z(github.com/mrechkunov/goKeeper.git/protob\beditionsp\xe8\a"
 
-var file_proto_gokeeper_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_proto_gokeeper_proto_goTypes = []any{
-	(*User)(nil),           // 0: mrechkunov.goKeeper.proto.User
-	(*EmptyMessage)(nil),   // 1: mrechkunov.goKeeper.proto.EmptyMessage
-	(*PasswordData)(nil),   // 2: mrechkunov.goKeeper.proto.PasswordData
-	(*StatusResponce)(nil), // 3: mrechkunov.goKeeper.proto.StatusResponce
+var file_gokeeper_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_gokeeper_proto_goTypes = []any{
+	(*FileData)(nil),       // 0: mrechkunov.goKeeper.proto.FileData
+	(*CardData)(nil),       // 1: mrechkunov.goKeeper.proto.CardData
+	(*User)(nil),           // 2: mrechkunov.goKeeper.proto.User
+	(*EmptyMessage)(nil),   // 3: mrechkunov.goKeeper.proto.EmptyMessage
+	(*PasswordData)(nil),   // 4: mrechkunov.goKeeper.proto.PasswordData
+	(*StatusResponce)(nil), // 5: mrechkunov.goKeeper.proto.StatusResponce
 }
-var file_proto_gokeeper_proto_depIdxs = []int32{
-	0, // 0: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:input_type -> mrechkunov.goKeeper.proto.User
-	0, // 1: mrechkunov.goKeeper.proto.GoKeeper.GetPassHash:input_type -> mrechkunov.goKeeper.proto.User
-	0, // 2: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:input_type -> mrechkunov.goKeeper.proto.User
-	0, // 3: mrechkunov.goKeeper.proto.GoKeeper.EditUser:input_type -> mrechkunov.goKeeper.proto.User
-	0, // 4: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:input_type -> mrechkunov.goKeeper.proto.User
-	2, // 5: mrechkunov.goKeeper.proto.GoKeeper.SavePassword:input_type -> mrechkunov.goKeeper.proto.PasswordData
-	2, // 6: mrechkunov.goKeeper.proto.GoKeeper.GetPass:input_type -> mrechkunov.goKeeper.proto.PasswordData
-	1, // 7: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
-	0, // 8: mrechkunov.goKeeper.proto.GoKeeper.GetPassHash:output_type -> mrechkunov.goKeeper.proto.User
-	1, // 9: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
-	0, // 10: mrechkunov.goKeeper.proto.GoKeeper.EditUser:output_type -> mrechkunov.goKeeper.proto.User
-	1, // 11: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
-	1, // 12: mrechkunov.goKeeper.proto.GoKeeper.SavePassword:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
-	2, // 13: mrechkunov.goKeeper.proto.GoKeeper.GetPass:output_type -> mrechkunov.goKeeper.proto.PasswordData
-	7, // [7:14] is the sub-list for method output_type
-	0, // [0:7] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+var file_gokeeper_proto_depIdxs = []int32{
+	2,  // 0: mrechkunov.goKeeper.proto.GoKeeper.GetPassHash:input_type -> mrechkunov.goKeeper.proto.User
+	2,  // 1: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:input_type -> mrechkunov.goKeeper.proto.User
+	2,  // 2: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:input_type -> mrechkunov.goKeeper.proto.User
+	2,  // 3: mrechkunov.goKeeper.proto.GoKeeper.EditUser:input_type -> mrechkunov.goKeeper.proto.User
+	2,  // 4: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:input_type -> mrechkunov.goKeeper.proto.User
+	4,  // 5: mrechkunov.goKeeper.proto.GoKeeper.SavePassword:input_type -> mrechkunov.goKeeper.proto.PasswordData
+	4,  // 6: mrechkunov.goKeeper.proto.GoKeeper.GetPassword:input_type -> mrechkunov.goKeeper.proto.PasswordData
+	4,  // 7: mrechkunov.goKeeper.proto.GoKeeper.EditPassword:input_type -> mrechkunov.goKeeper.proto.PasswordData
+	4,  // 8: mrechkunov.goKeeper.proto.GoKeeper.DeletePassword:input_type -> mrechkunov.goKeeper.proto.PasswordData
+	1,  // 9: mrechkunov.goKeeper.proto.GoKeeper.SaveCard:input_type -> mrechkunov.goKeeper.proto.CardData
+	1,  // 10: mrechkunov.goKeeper.proto.GoKeeper.GetCard:input_type -> mrechkunov.goKeeper.proto.CardData
+	1,  // 11: mrechkunov.goKeeper.proto.GoKeeper.EditCard:input_type -> mrechkunov.goKeeper.proto.CardData
+	1,  // 12: mrechkunov.goKeeper.proto.GoKeeper.DeleteCard:input_type -> mrechkunov.goKeeper.proto.CardData
+	0,  // 13: mrechkunov.goKeeper.proto.GoKeeper.SaveFile:input_type -> mrechkunov.goKeeper.proto.FileData
+	0,  // 14: mrechkunov.goKeeper.proto.GoKeeper.GetFile:input_type -> mrechkunov.goKeeper.proto.FileData
+	0,  // 15: mrechkunov.goKeeper.proto.GoKeeper.EditFile:input_type -> mrechkunov.goKeeper.proto.FileData
+	0,  // 16: mrechkunov.goKeeper.proto.GoKeeper.DeleteFile:input_type -> mrechkunov.goKeeper.proto.FileData
+	2,  // 17: mrechkunov.goKeeper.proto.GoKeeper.GetPassHash:output_type -> mrechkunov.goKeeper.proto.User
+	3,  // 18: mrechkunov.goKeeper.proto.GoKeeper.RegisterUser:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	3,  // 19: mrechkunov.goKeeper.proto.GoKeeper.AuthenticateUser:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	2,  // 20: mrechkunov.goKeeper.proto.GoKeeper.EditUser:output_type -> mrechkunov.goKeeper.proto.User
+	3,  // 21: mrechkunov.goKeeper.proto.GoKeeper.DeleteUser:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	3,  // 22: mrechkunov.goKeeper.proto.GoKeeper.SavePassword:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	4,  // 23: mrechkunov.goKeeper.proto.GoKeeper.GetPassword:output_type -> mrechkunov.goKeeper.proto.PasswordData
+	3,  // 24: mrechkunov.goKeeper.proto.GoKeeper.EditPassword:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	3,  // 25: mrechkunov.goKeeper.proto.GoKeeper.DeletePassword:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	3,  // 26: mrechkunov.goKeeper.proto.GoKeeper.SaveCard:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	1,  // 27: mrechkunov.goKeeper.proto.GoKeeper.GetCard:output_type -> mrechkunov.goKeeper.proto.CardData
+	3,  // 28: mrechkunov.goKeeper.proto.GoKeeper.EditCard:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	3,  // 29: mrechkunov.goKeeper.proto.GoKeeper.DeleteCard:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	3,  // 30: mrechkunov.goKeeper.proto.GoKeeper.SaveFile:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	0,  // 31: mrechkunov.goKeeper.proto.GoKeeper.GetFile:output_type -> mrechkunov.goKeeper.proto.FileData
+	3,  // 32: mrechkunov.goKeeper.proto.GoKeeper.EditFile:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	3,  // 33: mrechkunov.goKeeper.proto.GoKeeper.DeleteFile:output_type -> mrechkunov.goKeeper.proto.EmptyMessage
+	17, // [17:34] is the sub-list for method output_type
+	0,  // [0:17] is the sub-list for method input_type
+	0,  // [0:0] is the sub-list for extension type_name
+	0,  // [0:0] is the sub-list for extension extendee
+	0,  // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_proto_gokeeper_proto_init() }
-func file_proto_gokeeper_proto_init() {
-	if File_proto_gokeeper_proto != nil {
+func init() { file_gokeeper_proto_init() }
+func file_gokeeper_proto_init() {
+	if File_gokeeper_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_gokeeper_proto_rawDesc), len(file_proto_gokeeper_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_gokeeper_proto_rawDesc), len(file_gokeeper_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_proto_gokeeper_proto_goTypes,
-		DependencyIndexes: file_proto_gokeeper_proto_depIdxs,
-		MessageInfos:      file_proto_gokeeper_proto_msgTypes,
+		GoTypes:           file_gokeeper_proto_goTypes,
+		DependencyIndexes: file_gokeeper_proto_depIdxs,
+		MessageInfos:      file_gokeeper_proto_msgTypes,
 	}.Build()
-	File_proto_gokeeper_proto = out.File
-	file_proto_gokeeper_proto_goTypes = nil
-	file_proto_gokeeper_proto_depIdxs = nil
+	File_gokeeper_proto = out.File
+	file_gokeeper_proto_goTypes = nil
+	file_gokeeper_proto_depIdxs = nil
 }

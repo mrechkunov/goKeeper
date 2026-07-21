@@ -1,4 +1,4 @@
-package service
+package db
 
 import (
 	"context"
@@ -10,23 +10,23 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// Insert NEW user in DB if login is not exist
-func InsertUser(ctx context.Context, user model.Users) error {
+// Add user in DB if login is not exist
+func AddUser(ctx context.Context, user model.Users) error {
 	usersStorage := repository.NewUsersStorage(config.DBconn)
 	exist, err := usersStorage.IsExist(ctx, user.Login)
 	if err != nil || exist {
 		err := status.Error(codes.AlreadyExists, "User already exist")
 		return err
 	} else {
-		usersStorage.CreateUser(ctx, user)
+		usersStorage.InsertUser(ctx, user)
 		return nil
 	}
 }
 
-// GetUserByLogin return user by login
-func GetUserByLogin(ctx context.Context, login string) (user model.Users, err error) {
+// GetUser return user by login
+func GetUser(ctx context.Context, login string) (user model.Users, err error) {
 	usersStorage := repository.NewUsersStorage(config.DBconn)
-	user, err = usersStorage.ReadUser(ctx, login)
+	user, err = usersStorage.SelectUser(ctx, login)
 	if err != nil {
 		return user, err
 	}
@@ -39,8 +39,8 @@ func EditUser(ctx context.Context, user model.Users) (err error) {
 	return usersStorage.UpdateUser(ctx, user)
 }
 
-// TODO: delete user (delete user and all data in storages)
-func UserDelete(ctx context.Context, user model.Users) (err error) {
+// DeleteUser delete user and all data in storages
+func DeleteUser(ctx context.Context, user model.Users) (err error) {
 	usersStorage := repository.NewUsersStorage(config.DBconn)
 	return usersStorage.DeleteUser(ctx, user)
 }

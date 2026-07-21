@@ -38,8 +38,8 @@ func (su *StorageUsers) IsExist(ctx context.Context, login string) (bool, error)
 	return true, nil
 }
 
-// CreateUser добавить пользователя C
-func (su *StorageUsers) CreateUser(ctx context.Context, user model.Users) error {
+// InsertUser добавить пользователя C
+func (su *StorageUsers) InsertUser(ctx context.Context, user model.Users) error {
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
 	defer cancel()
 	sqlStatement := `INSERT INTO users (u_login, u_password) 
@@ -52,9 +52,9 @@ func (su *StorageUsers) CreateUser(ctx context.Context, user model.Users) error 
 	return nil
 }
 
-// ReadUser Вернуть пользователя по логину (проверить что он есть и вернуть user) R
-func (su *StorageUsers) ReadUser(ctx context.Context, login string) (user model.Users, err error) {
-	ctxWithTimeout, cancel := context.WithTimeout(ctx, 3*time.Second)
+// SelectUser Вернуть пользователя по логину (проверить что он есть и вернуть user) R
+func (su *StorageUsers) SelectUser(ctx context.Context, login string) (user model.Users, err error) {
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
 	defer cancel()
 	exist, err := su.IsExist(ctxWithTimeout, login)
 	if err != nil {
@@ -97,9 +97,12 @@ func (su *StorageUsers) DeleteUser(ctx context.Context, user model.Users) error 
 
 	//TODO: make sync group and run in gorutines
 	PassStorage := NewPasswordsStorage(su.DBconnection)
-	PassStorage.DeleteDataByLogin(ctxWithTimeout, user.Login)
+	PassStorage.DeleteAllPasswordsByLogin(ctxWithTimeout, user.Login)
 
 	//TODO: delete in cards table
+	CardStorage := NewCardsStorage(su.DBconnection)
+	CardStorage.DeleteAllCardsByLogin(ctxWithTimeout, user.Login)
+
 	//TODO: delete in binary file table
 
 	return nil

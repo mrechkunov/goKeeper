@@ -5,14 +5,42 @@ package mrechkunov.goKeeper.proto;
 option go_package = "github.com/mrechkunov/goKeeper.git/proto"; 
 
 service GoKeeper {
-  rpc RegisterUser (User) returns (EmptyMessage);
   rpc GetPassHash (User) returns (User);
+  
+  rpc RegisterUser (User) returns (EmptyMessage);
   rpc AuthenticateUser (User) returns (EmptyMessage); // return token in metadata if login & pass is correct
   rpc EditUser (User) returns (User); // change password
   rpc DeleteUser (User) returns (EmptyMessage);
+
   rpc SavePassword (PasswordData) returns (EmptyMessage);
-  rpc GetPass (PasswordData) returns (PasswordData);
+  rpc GetPassword (PasswordData) returns (PasswordData);
+  rpc EditPassword (PasswordData) returns (EmptyMessage); 
+  rpc DeletePassword (PasswordData) returns (EmptyMessage);
+
+  rpc SaveCard (CardData) returns (EmptyMessage);
+  rpc GetCard (CardData) returns (CardData);
+  rpc EditCard (CardData) returns (EmptyMessage); 
+  rpc DeleteCard (CardData) returns (EmptyMessage);
+
+  rpc SaveFile (FileData) returns (EmptyMessage);
+  rpc GetFile (FileData) returns (FileData);
+  rpc EditFile (FileData) returns (EmptyMessage); 
+  rpc DeleteFile (FileData) returns (EmptyMessage);
+  
 }
+message FileData {
+    string filename = 1;
+    string metadata = 2;
+    bytes cipherdata = 3;
+    string login = 4;
+}
+
+message CardData {
+    string login = 1;
+    string cipherdata = 2;
+    string metadata =3;
+}
+
 
 message User {
     string login = 1;
