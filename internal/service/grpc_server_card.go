@@ -5,7 +5,7 @@ import (
 
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	"github.com/mrechkunov/goKeeper.git/internal/model"
-	"github.com/mrechkunov/goKeeper.git/internal/service/db"
+	"github.com/mrechkunov/goKeeper.git/internal/service/dbservice"
 	pb "github.com/mrechkunov/goKeeper.git/proto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -18,7 +18,7 @@ func (gk *GoKeeperServer) SaveCard(ctx context.Context, in *pb.CardData) (out *p
 		CipherData: in.GetCipherdata(),
 		MetaData:   in.GetMetadata(),
 	}
-	if err = db.AddCard(ctx, data); err != nil {
+	if err = dbservice.AddCard(ctx, data); err != nil {
 		logger.Log.Warnln("Error while save card in db", err)
 		return out, status.Error(codes.AlreadyExists, "server error card not saved")
 	}
@@ -27,7 +27,7 @@ func (gk *GoKeeperServer) SaveCard(ctx context.Context, in *pb.CardData) (out *p
 
 // GetCard return card data from storage
 func (gk *GoKeeperServer) GetCard(ctx context.Context, in *pb.CardData) (out *pb.CardData, err error) {
-	data, err := db.GetCard(ctx, in.GetLogin(), in.GetMetadata())
+	data, err := dbservice.GetCard(ctx, in.GetLogin(), in.GetMetadata())
 	if err != nil {
 		logger.Log.Warnln("error while get card data", err)
 	}
@@ -46,7 +46,7 @@ func (gk *GoKeeperServer) EditCard(ctx context.Context, in *pb.CardData) (out *p
 		CipherData: in.GetCipherdata(),
 		MetaData:   in.GetMetadata(),
 	}
-	err = db.EditCard(ctx, data)
+	err = dbservice.EditCard(ctx, data)
 	if err != nil {
 		logger.Log.Warnln("error while edit card data", err)
 		return out, err
@@ -61,7 +61,7 @@ func (gk *GoKeeperServer) DeleteCard(ctx context.Context, in *pb.CardData) (out 
 		CipherData: in.GetCipherdata(),
 		MetaData:   in.GetMetadata(),
 	}
-	err = db.DeleteCard(ctx, data)
+	err = dbservice.DeleteCard(ctx, data)
 	if err != nil {
 		logger.Log.Warnln("error while delete card", err)
 		return out, err

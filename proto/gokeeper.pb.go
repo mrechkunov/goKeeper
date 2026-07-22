@@ -25,6 +25,7 @@ type FileData struct {
 	xxx_hidden_Filename    *string                `protobuf:"bytes,1,opt,name=filename"`
 	xxx_hidden_Metadata    *string                `protobuf:"bytes,2,opt,name=metadata"`
 	xxx_hidden_Cipherdata  []byte                 `protobuf:"bytes,3,opt,name=cipherdata"`
+	xxx_hidden_Login       *string                `protobuf:"bytes,4,opt,name=login"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -83,14 +84,24 @@ func (x *FileData) GetCipherdata() []byte {
 	return nil
 }
 
+func (x *FileData) GetLogin() string {
+	if x != nil {
+		if x.xxx_hidden_Login != nil {
+			return *x.xxx_hidden_Login
+		}
+		return ""
+	}
+	return ""
+}
+
 func (x *FileData) SetFilename(v string) {
 	x.xxx_hidden_Filename = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 3)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 4)
 }
 
 func (x *FileData) SetMetadata(v string) {
 	x.xxx_hidden_Metadata = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 3)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 4)
 }
 
 func (x *FileData) SetCipherdata(v []byte) {
@@ -98,7 +109,12 @@ func (x *FileData) SetCipherdata(v []byte) {
 		v = []byte{}
 	}
 	x.xxx_hidden_Cipherdata = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 3)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 4)
+}
+
+func (x *FileData) SetLogin(v string) {
+	x.xxx_hidden_Login = &v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 4)
 }
 
 func (x *FileData) HasFilename() bool {
@@ -122,6 +138,13 @@ func (x *FileData) HasCipherdata() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
 }
 
+func (x *FileData) HasLogin() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 3)
+}
+
 func (x *FileData) ClearFilename() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
 	x.xxx_hidden_Filename = nil
@@ -137,12 +160,18 @@ func (x *FileData) ClearCipherdata() {
 	x.xxx_hidden_Cipherdata = nil
 }
 
+func (x *FileData) ClearLogin() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 3)
+	x.xxx_hidden_Login = nil
+}
+
 type FileData_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	Filename   *string
 	Metadata   *string
 	Cipherdata []byte
+	Login      *string
 }
 
 func (b0 FileData_builder) Build() *FileData {
@@ -150,16 +179,20 @@ func (b0 FileData_builder) Build() *FileData {
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.Filename != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 3)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 4)
 		x.xxx_hidden_Filename = b.Filename
 	}
 	if b.Metadata != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 3)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 4)
 		x.xxx_hidden_Metadata = b.Metadata
 	}
 	if b.Cipherdata != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 3)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 4)
 		x.xxx_hidden_Cipherdata = b.Cipherdata
+	}
+	if b.Login != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 4)
+		x.xxx_hidden_Login = b.Login
 	}
 	return m0
 }
@@ -688,13 +721,14 @@ var File_gokeeper_proto protoreflect.FileDescriptor
 
 const file_gokeeper_proto_rawDesc = "" +
 	"\n" +
-	"\x0egokeeper.proto\x12\x19mrechkunov.goKeeper.proto\"b\n" +
+	"\x0egokeeper.proto\x12\x19mrechkunov.goKeeper.proto\"x\n" +
 	"\bFileData\x12\x1a\n" +
 	"\bfilename\x18\x01 \x01(\tR\bfilename\x12\x1a\n" +
 	"\bmetadata\x18\x02 \x01(\tR\bmetadata\x12\x1e\n" +
 	"\n" +
 	"cipherdata\x18\x03 \x01(\fR\n" +
-	"cipherdata\"\\\n" +
+	"cipherdata\x12\x14\n" +
+	"\x05login\x18\x04 \x01(\tR\x05login\"\\\n" +
 	"\bCardData\x12\x14\n" +
 	"\x05login\x18\x01 \x01(\tR\x05login\x12\x1e\n" +
 	"\n" +

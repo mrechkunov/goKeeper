@@ -1,4 +1,4 @@
-package db
+package dbservice
 
 import (
 	"context"
@@ -35,5 +35,6 @@ func DeleteFile(ctx context.Context, data model.File) error {
 // DeleteAllUserFiles delete all records by login
 func DeleteAllUserFiles(ctx context.Context, login string) error {
 	fileStorage := repository.NewFileStorage(config.DBconn)
+
 	return fileStorage.DeleteAllFilesByLogin(ctx, login)
 }

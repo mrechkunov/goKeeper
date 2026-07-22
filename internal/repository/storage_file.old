@@ -1,0 +1,155 @@
+package repository
+
+import (
+	"context"
+	"database/sql"
+	"errors"
+	"os"
+	"time"
+
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/mrechkunov/goKeeper.git/internal/logger"
+	"github.com/mrechkunov/goKeeper.git/internal/model"
+)
+
+type StorageFile struct {
+	DBconnection *sql.DB
+}
+
+// создаем новый сторадж для работы с таблицей карт
+func NewFileStorage(DBconn *sql.DB) StorageFile {
+	return StorageFile{DBconnection: DBconn}
+}
+
+// проверить есть ли данные в БД по login + metadata
+func (sf *StorageFile) isExist(ctx context.Context, data model.File) bool {
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
+	defer cancel()
+	var resp model.File
+	sqlStatement := `SELECT f_login, f_file_path, f_metadata FROM files WHERE f_metadata = $1 AND f_login = $2;`
+	err := sf.DBconnection.QueryRowContext(ctxWithTimeout, sqlStatement, data.MetaData, data.UserLogin).Scan(&resp.UserLogin, &resp.FilePath, &resp.MetaData)
+	if err == sql.ErrNoRows {
+		logger.Log.Infoln("file is not exist in DB")
+		return false
+	}
+	return true
+}
+
+// InsertFile добавить данные файла в БД, если таких нет
+func (sf *StorageFile) InsertFile(ctx context.Context, data model.File) error {
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
+	defer cancel()
+	if sf.isExist(ctxWithTimeout, data) {
+		err := errors.New("data is already exists in DB")
+		return err
+	}
+	sqlStatement := `INSERT INTO files (f_login, f_file_path, f_metadata) 
+				VALUES ($1, $2, $3)`
+	_, err := sf.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, data.UserLogin, data.FilePath, data.MetaData)
+	if err != nil {
+		logger.Log.Errorln("error while insert card in DB", err)
+		return err
+	}
+	return nil
+}
+
+// SelectFile вернуть данные файла, если корректный login и metadata
+func (sf *StorageFile) SelectFile(ctx context.Context, login string, metadata string) (resp model.File, err error) {
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
+	defer cancel()
+	sqlStatement := `SELECT f_login, f_file_path, f_metadata FROM files WHERE f_login = $1 AND f_metadata = $2;`
+	err = sf.DBconnection.QueryRowContext(ctxWithTimeout, sqlStatement, login, metadata).Scan(&resp.UserLogin, &resp.FilePath, &resp.MetaData)
+	if err == sql.ErrNoRows {
+		logger.Log.Infoln("file is not exist in DB")
+		return resp, err
+	}
+	return resp, nil
+}
+
+// UpdateFile изменить данные файла, если передан корректный login и metadata
+func (sf *StorageFile) UpdateFile(ctx context.Context, data model.File) error {
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
+	defer cancel()
+
+	if !sf.isExist(ctxWithTimeout, data) {
+		err := errors.New("data is not exists in DB")
+		logger.Log.Infoln("data is not exists in DB")
+		return err
+	}
+	sqlStatement := `UPDATE files SET f_file_path = $1 WHERE f_login = $2 AND f_metadata = $3;`
+	_, err := sf.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, data.FilePath, data.UserLogin, data.MetaData)
+	if err != nil {
+		logger.Log.Errorln("error while update file in DB", err)
+		return err
+	}
+	return nil
+}
+
+// DeleteFile удалить данные файла из БД, если корректный login и metadata D
+func (sf *StorageFile) DeleteFile(ctx context.Context, data model.File) error {
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
+	defer cancel()
+	if !sf.isExist(ctxWithTimeout, data) {
+		err := errors.New("data is not exists in DB")
+		logger.Log.Infoln("data is not exists in DB")
+		return err
+	}
+	sqlStatement := `DELETE FROM files 
+					WHERE f_login = $1 AND f_metadata = $2;`
+	_, err := sf.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, data.UserLogin, data.MetaData)
+	if err != nil {
+		logger.Log.Errorln("error while delete file data from DB", err)
+		return err
+	}
+	return nil
+}
+
+// DeleteAllFilesByLogin удалить все сохраненные данные файлов пользователя
+func (sf *StorageFile) DeleteAllFilesByLogin(ctx context.Context, login string) error {
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
+	// сходим в БД и возьмем все адреса файлов пользователя
+	FilesPaths, err := sf.GetFilesPathByLogin(ctxWithTimeout, login)
+	if err != nil {
+		logger.Log.Warnln("error while get all file paths fo user:", login, err)
+	}
+	// удалим файлы с диска
+	for _, fp := range FilesPaths {
+		err = os.Remove(fp)
+		if err != nil {
+			logger.Log.Warnln("error while delete file:", fp, "from hdd", err)
+		}
+	}
+	sqlStatement := `DELETE FROM files 
+					WHERE f_login = $1;`
+	_, err = sf.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, login)
+	if err != nil {
+		logger.Log.Errorln("error while delete files from DB for user: ", login, err)
+		return err
+	}
+	return nil
+}
+
+// GetFilesPathByLogin вернуть список путей файлов на hdd по логину
+func (sf *StorageFile) GetFilesPathByLogin(ctx context.Context, login string) (resp []string, err error) {
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
+	defer cancel()
+	sqlStatement := `SELECT f_file_path FROM files WHERE f_login = $1;`
+	rows, err := sf.DBconnection.QueryContext(ctxWithTimeout, sqlStatement, login)
+	if err == sql.ErrNoRows {
+		logger.Log.Infoln("file is not exist in DB")
+		return resp, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var r string
+		err = rows.Scan(&r)
+		if err != nil {
+			logger.Log.Warnln("error while parsing result sql query", err)
+			return
+		}
+		resp = append(resp, r)
+	}
+	return resp, nil
+}

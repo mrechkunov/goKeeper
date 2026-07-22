@@ -9,10 +9,11 @@ import (
 	"github.com/mrechkunov/goKeeper.git/internal/cryptodata"
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	"github.com/mrechkunov/goKeeper.git/internal/model"
+	pb "github.com/mrechkunov/goKeeper.git/proto"
 )
 
-// SaveFile client service for save file data on server
-func SaveFile(ctx context.Context, file model.File) (err error) {
+// SaveFile client service for encrypt and save file data on server
+func SaveFile(ctx context.Context, client pb.GoKeeperClient, file model.File) (err error) {
 	//узнать размер файла, если он больше чем 4 мб отказать
 	fileInfo, err := os.Stat(file.FilePath)
 	if err != nil {
@@ -31,82 +32,76 @@ func SaveFile(ctx context.Context, file model.File) (err error) {
 		logger.Log.Warnln("error while reading file", err)
 		return err
 	}
-
 	//зашифровать байты
 	file.CipherData, err = cryptodata.CryptoFile(data)
 	// передать на сервер данные
-
+	dataPb := pb.FileData_builder{
+		Filename:   &file.FileName,
+		Metadata:   &file.MetaData,
+		Cipherdata: file.CipherData,
+		Login:      &file.UserLogin,
+	}.Build()
+	_, err = client.SaveFile(ctx, dataPb)
+	if err != nil {
+		logger.Log.Warnln("error while save file", err)
+		return err
+	}
 	return nil
 }
 
-// 	data.CipherData, err = cryptodata.CryptoCard(data.CardNumber, data.ValidTo, data.CVVCode)
-// 	if err != nil {
-// 		logger.Log.Infoln(err)
-// 	}
-// 	dataPb := pb.CardData_builder{
-// 		Login:      &data.UserLogin,
-// 		Cipherdata: &data.CipherData,
-// 		Metadata:   &data.MetaData,
-// 	}.Build()
-// 	_, err = client.SaveCard(ctx, dataPb)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+// GetFile return file data from server and decrypt it
+func GetFile(ctx context.Context, client pb.GoKeeperClient, file model.File) (out model.File, err error) {
+	FilePb := pb.FileData_builder{
+		Filename: &file.FileName,
+		Metadata: &file.MetaData,
+		Login:    &file.UserLogin,
+	}.Build()
+	data, err := client.GetFile(ctx, FilePb)
+	if err != nil {
+		return out, err
+	}
+	// создать папку для пользователя если ее нет
+	dirPath := "./download/" + data.GetLogin()
+	err = os.MkdirAll(dirPath, 0755) // 0755 — права доступа для владельца, группы и остальных
+	if err != nil {
+		logger.Log.Warnln("error while make dir on client size", err)
+		return out, err
+	}
+	decryptData, err := cryptodata.DecryptFile(data.GetCipherdata())
 
-// // Get Card return card data from server
-// func GetCard(ctx context.Context, client pb.GoKeeperClient, card model.Cards) (out model.Cards, err error) {
-// 	cardPb := pb.CardData_builder{
-// 		Login:      &card.UserLogin,
-// 		Cipherdata: &card.CipherData,
-// 		Metadata:   &card.MetaData,
-// 	}.Build()
-// 	data, err := client.GetCard(ctx, cardPb)
-// 	if err != nil {
-// 		return out, err
-// 	}
-// 	number, valid, cvv, err := cryptodata.DecryptCard(data.GetCipherdata())
-// 	if err != nil {
-// 		return out, err
-// 	}
-// 	out = model.Cards{
-// 		UserLogin:  data.GetLogin(),
-// 		MetaData:   data.GetMetadata(),
-// 		CardNumber: number,
-// 		ValidTo:    valid,
-// 		CVVCode:    cvv,
-// 	}
-// 	return out, err
-// }
+	// открываем (создаем, если нет) файл с правами чтения/записи
+	filePath := dirPath + "/" + data.GetFilename()
+	fileToWrite, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+	if err != nil {
+		logger.Log.Warnln("error while open file on client size", err)
+		return out, err
+	}
+	defer fileToWrite.Close()
 
-// // EditCard edit card data on server
-// func EditCard(ctx context.Context, client pb.GoKeeperClient, card model.Cards) (err error) {
-// 	card.CipherData, err = cryptodata.CryptoCard(card.CardNumber, card.ValidTo, card.CVVCode)
-// 	if err != nil {
-// 		logger.Log.Infoln(err)
-// 	}
-// 	cardPb := pb.CardData_builder{
-// 		Login:      &card.UserLogin,
-// 		Cipherdata: &card.CipherData,
-// 		Metadata:   &card.MetaData,
-// 	}.Build()
-// 	_, err = client.EditCard(ctx, cardPb)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+	// записываем байты в файл
+	_, err = fileToWrite.Write(decryptData)
+	if err != nil {
+		logger.Log.Warnln("error while write in file on client size", err)
+		return out, err
+	}
+	out = model.File{
+		FileName:  data.GetFilename(),
+		FilePath:  filePath,
+		MetaData:  data.GetMetadata(),
+		UserLogin: data.GetLogin(),
+	}
+	return out, nil
+}
 
-// // DeleteCard delete card data from server
-// func DeleteCard(ctx context.Context, client pb.GoKeeperClient, card model.Cards) (err error) {
-// 	cardPb := pb.CardData_builder{
-// 		Login:    &card.UserLogin,
-// 		Metadata: &card.MetaData,
-// 	}.Build()
-// 	_, err = client.DeleteCard(ctx, cardPb)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+// DeleteCard delete card data from server
+func DeleteFile(ctx context.Context, client pb.GoKeeperClient, file model.File) (err error) {
+	filePb := pb.FileData_builder{
+		Login:    &file.UserLogin,
+		Metadata: &file.MetaData,
+	}.Build()
+	_, err = client.DeleteFile(ctx, filePb)
+	if err != nil {
+		return err
+	}
+	return nil
+}

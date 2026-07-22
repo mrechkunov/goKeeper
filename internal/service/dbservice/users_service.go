@@ -1,7 +1,8 @@
-package db
+package dbservice
 
 import (
 	"context"
+	"sync"
 
 	"github.com/mrechkunov/goKeeper.git/internal/config"
 	"github.com/mrechkunov/goKeeper.git/internal/model"
@@ -41,6 +42,25 @@ func EditUser(ctx context.Context, user model.Users) (err error) {
 
 // DeleteUser delete user and all data in storages
 func DeleteUser(ctx context.Context, user model.Users) (err error) {
+	var wg sync.WaitGroup
+	wg.Add(3)
+	// удалим все данные пользователя ранее созданные
+	go func() {
+		defer wg.Done()
+		PassStorage := repository.NewPasswordsStorage(config.DBconn)
+		PassStorage.DeleteAllPasswordsByLogin(ctx, user.Login)
+	}()
+	go func() {
+		defer wg.Done()
+		CardStorage := repository.NewCardsStorage(config.DBconn)
+		CardStorage.DeleteAllCardsByLogin(ctx, user.Login)
+	}()
+	go func() {
+		defer wg.Done()
+		// удалим записи из БД
+		DeleteAllUserFiles(ctx, user.Login)
+	}()
+	wg.Wait()
 	usersStorage := repository.NewUsersStorage(config.DBconn)
 	return usersStorage.DeleteUser(ctx, user)
 }
