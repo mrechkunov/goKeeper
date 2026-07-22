@@ -6,6 +6,7 @@ import (
 
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	"github.com/mrechkunov/goKeeper.git/internal/model"
+	"github.com/mrechkunov/goKeeper.git/internal/service/dbservice"
 	pb "github.com/mrechkunov/goKeeper.git/proto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -43,7 +44,7 @@ func (gk *GoKeeperServer) SaveFile(ctx context.Context, in *pb.FileData) (out *p
 	data.FilePath = filePath
 	data.CipherData = nil
 	// сходить в БД и добавить запись
-	if err = db.AddFile(ctx, data); err != nil {
+	if err = dbservice.AddFile(ctx, data); err != nil {
 		logger.Log.Warnln("Error while save file in db", err)
 		return out, status.Error(codes.AlreadyExists, "server error file not saved")
 	}
@@ -53,7 +54,7 @@ func (gk *GoKeeperServer) SaveFile(ctx context.Context, in *pb.FileData) (out *p
 // GetFile return File data from server
 func (gk *GoKeeperServer) GetFile(ctx context.Context, in *pb.FileData) (out *pb.FileData, err error) {
 	// читаем данные из бд
-	data, err := db.GetFile(ctx, in.GetLogin(), in.GetMetadata())
+	data, err := dbservice.GetFile(ctx, in.GetLogin(), in.GetMetadata())
 	if err != nil {
 		logger.Log.Warnln("error while get file data", err)
 	}
@@ -80,7 +81,7 @@ func (gk *GoKeeperServer) DeleteFile(ctx context.Context, in *pb.FileData) (out 
 		MetaData:  in.GetMetadata(),
 	}
 	// сходим в бд и возьмем данные о файле
-	inDBData, err := db.GetFile(ctx, data.UserLogin, data.MetaData)
+	inDBData, err := dbservice.GetFile(ctx, data.UserLogin, data.MetaData)
 	// удалим файл с диска
 	err = os.Remove(inDBData.FilePath)
 	if err != nil {
@@ -88,7 +89,7 @@ func (gk *GoKeeperServer) DeleteFile(ctx context.Context, in *pb.FileData) (out 
 		return out, nil
 	}
 	// удаляем запись в БД
-	err = db.DeleteFile(ctx, data)
+	err = dbservice.DeleteFile(ctx, data)
 	if err != nil {
 		logger.Log.Warnln("error while delete file", err)
 		return out, err

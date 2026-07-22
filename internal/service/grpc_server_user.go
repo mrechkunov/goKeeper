@@ -7,7 +7,7 @@ import (
 	"github.com/mrechkunov/goKeeper.git/internal/auth"
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	"github.com/mrechkunov/goKeeper.git/internal/model"
-	"github.com/mrechkunov/goKeeper.git/internal/service/db"
+	"github.com/mrechkunov/goKeeper.git/internal/service/dbservice"
 	pb "github.com/mrechkunov/goKeeper.git/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -21,7 +21,7 @@ type GoKeeperServer struct {
 
 // GetPassHash return password hash from storage
 func (gk *GoKeeperServer) GetPassHash(ctx context.Context, in *pb.User) (out *pb.User, err error) {
-	user, err := db.GetUser(ctx, in.GetLogin())
+	user, err := dbservice.GetUser(ctx, in.GetLogin())
 	if err != nil {
 		return out, err
 	}
@@ -46,7 +46,7 @@ func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *p
 		err = errors.New("empty pass")
 		return out, err
 	}
-	err = db.AddUser(ctx, user)
+	err = dbservice.AddUser(ctx, user)
 	if err != nil {
 		logger.Log.Infoln("Error while insert user:", err)
 		return out, err
@@ -67,7 +67,7 @@ func (gk *GoKeeperServer) RegisterUser(ctx context.Context, in *pb.User) (out *p
 
 // AuthenticateUser возвращает по логину и hash паролю token в md
 func (gk *GoKeeperServer) AuthenticateUser(ctx context.Context, in *pb.User) (out *pb.EmptyMessage, err error) {
-	user, err := db.GetUser(ctx, in.GetLogin())
+	user, err := dbservice.GetUser(ctx, in.GetLogin())
 	if err != nil {
 		return out, err
 	}
@@ -99,7 +99,7 @@ func (gk *GoKeeperServer) EditUser(ctx context.Context, in *pb.User) (out *pb.Us
 		Login:        &user.Login,
 		PasswordHash: &user.PasswordHash,
 	}.Build()
-	return out, db.EditUser(ctx, user)
+	return out, dbservice.EditUser(ctx, user)
 }
 
 func (gk *GoKeeperServer) DeleteUser(ctx context.Context, in *pb.User) (out *pb.EmptyMessage, err error) {
@@ -107,7 +107,7 @@ func (gk *GoKeeperServer) DeleteUser(ctx context.Context, in *pb.User) (out *pb.
 		Login:        in.GetLogin(),
 		PasswordHash: in.GetPasswordHash(),
 	}
-	if err = db.DeleteUser(ctx, user); err != nil {
+	if err = dbservice.DeleteUser(ctx, user); err != nil {
 		return out, status.Error(codes.Internal, "server error user not deleted")
 	}
 	return out, nil

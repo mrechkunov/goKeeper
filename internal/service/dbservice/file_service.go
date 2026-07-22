@@ -2,8 +2,10 @@ package dbservice
 
 import (
 	"context"
+	"os"
 
 	"github.com/mrechkunov/goKeeper.git/internal/config"
+	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	"github.com/mrechkunov/goKeeper.git/internal/model"
 	"github.com/mrechkunov/goKeeper.git/internal/repository"
 )
@@ -35,6 +37,17 @@ func DeleteFile(ctx context.Context, data model.File) error {
 // DeleteAllUserFiles delete all records by login
 func DeleteAllUserFiles(ctx context.Context, login string) error {
 	fileStorage := repository.NewFileStorage(config.DBconn)
-
-	return fileStorage.DeleteAllFilesByLogin(ctx, login)
+	pathList, err := fileStorage.DeleteAllFilesByLogin(ctx, login)
+	if err != nil {
+		logger.Log.Warnln("error while delete user file data", err)
+		return err
+	}
+	// удалим файлы с диска
+	for _, fp := range pathList {
+		err = os.Remove(fp)
+		if err != nil {
+			logger.Log.Warnln("error while delete file:", fp, "from hdd", err)
+		}
+	}
+	return nil
 }
