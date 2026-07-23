@@ -20,7 +20,7 @@ type StorageFile struct {
 	db *sql.DB
 }
 
-// NewFileStorage возвращает указатель.
+// NewFileStorage возвращает указатель на сторадж таблицы с файлами
 func NewFileStorage(db *sql.DB) *StorageFile {
 	return &StorageFile{db: db}
 }

@@ -8,11 +8,10 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/mrechkunov/goKeeper.git/internal/config"
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 	"golang.org/x/crypto/bcrypt"
 )
-
-const secretKey = "secret key"
 
 // generate and sign token
 func GenerateToken(uLogin string) (string, error) {
@@ -25,7 +24,7 @@ func GenerateToken(uLogin string) (string, error) {
 	// Создаем токен
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// Подписываем токен
-	tokenString, err := token.SignedString([]byte(secretKey))
+	tokenString, err := token.SignedString([]byte(config.SecretKey))
 	if err != nil {
 		logger.Log.Errorln("error while sign token", err)
 		return "", err
@@ -36,7 +35,7 @@ func GenerateToken(uLogin string) (string, error) {
 // ValidateToken validate token signature
 func ValidateToken(tokenString string) error {
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
-		return []byte(secretKey), nil
+		return []byte(config.SecretKey), nil
 	})
 	if err != nil || !token.Valid {
 		logger.Log.Infoln(tokenString, err)
@@ -57,7 +56,7 @@ func GetLoginByToken(tokenString string) (login string, err error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method")
 		}
-		return []byte(secretKey), nil
+		return []byte(config.SecretKey), nil
 	})
 
 	if err != nil {

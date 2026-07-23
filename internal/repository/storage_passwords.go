@@ -17,8 +17,8 @@ type StoragePasswords struct {
 }
 
 // создаем новый сторадж для работы с таблицей паролей
-func NewPasswordsStorage(DBconn *sql.DB) StoragePasswords {
-	return StoragePasswords{DBconnection: DBconn}
+func NewPasswordsStorage(DBconn *sql.DB) *StoragePasswords {
+	return &StoragePasswords{DBconnection: DBconn}
 }
 
 // проверить есть ли данные в БД по login + metadata

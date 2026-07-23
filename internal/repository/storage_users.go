@@ -16,8 +16,8 @@ type StorageUsers struct {
 }
 
 // NewUsersStorage new storage for work with users table in db
-func NewUsersStorage(DBconn *sql.DB) StorageUsers {
-	return StorageUsers{DBconnection: DBconn}
+func NewUsersStorage(DBconn *sql.DB) *StorageUsers {
+	return &StorageUsers{DBconnection: DBconn}
 }
 
 // IsExist return true if user with login is exist in db

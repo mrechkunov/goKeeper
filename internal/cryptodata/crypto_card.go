@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/mrechkunov/goKeeper.git/internal/auth"
+	"github.com/mrechkunov/goKeeper.git/internal/config"
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 )
 
@@ -16,7 +17,7 @@ func CryptoCard(number, valid, cvv string) (out string, err error) {
 		return out, errors.New("no correct card number")
 	}
 	data := number + "|" + valid + "|" + cvv
-	cryptodata, err := Encrypt([]byte(data), []byte(keyString))
+	cryptodata, err := Encrypt([]byte(data), []byte(config.KeyString))
 	if err != nil {
 		logger.Log.Errorln(err)
 		return
@@ -33,7 +34,7 @@ func DecryptCard(in string) (string, string, string, error) {
 	}
 
 	// Передаем глобальный ключ keyString
-	decryptdata, err := Decrypt(decodedBytes, []byte(keyString))
+	decryptdata, err := Decrypt(decodedBytes, []byte(config.KeyString))
 	if err != nil {
 		logger.Log.Errorln("decryption error:", err)
 		return "", "", "", err // Явно возвращаем ошибку криптографии

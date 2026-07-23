@@ -99,21 +99,21 @@ func (gk *GoKeeperServer) DeleteFile(ctx context.Context, in *pb.FileData) (*pb.
 		MetaData:  in.GetMetadata(),
 	}
 
-	// 1. Сходим в бд и возьмем данные о файле
+	// Сходим в бд и возьмем данные о файле
 	inDBData, err := dbservice.GetFile(ctx, data.UserLogin, data.MetaData)
 	if err != nil {
 		logger.Log.Warnln("error while get file data from db for deletion", err)
 		return nil, err // Досрочный возврат при ошибке БД
 	}
 
-	// 2. Удалим файл с диска
+	// Удалим файл с диска
 	err = os.Remove(inDBData.FilePath)
 	if err != nil && !os.IsNotExist(err) { // Если файла уже нет на диске, не паникуем, идем дальше
 		logger.Log.Warnln("error while delete file from hdd", err)
 		return nil, status.Error(codes.Internal, "failed to delete physical file")
 	}
 
-	// 3. Удаляем запись в БД
+	// Удаляем запись в БД
 	err = dbservice.DeleteFile(ctx, data)
 	if err != nil {
 		logger.Log.Warnln("error while delete file record from db", err)
@@ -137,7 +137,7 @@ func (gk *GoKeeperServer) EditFile(ctx context.Context, in *pb.FileData) (*pb.Em
 		FileName:   safeFileName,
 	}
 
-	// 1. Сначала проверяем в СУБД, существует ли вообще редактируемый файл
+	// Сначала проверяем в СУБД, существует ли вообще редактируемый файл
 	inDBData, err := dbservice.GetFile(ctx, data.UserLogin, data.MetaData)
 	if err != nil {
 		logger.Log.Warnln("error while finding file for edit", err)
@@ -147,7 +147,7 @@ func (gk *GoKeeperServer) EditFile(ctx context.Context, in *pb.FileData) (*pb.Em
 	// Использовать старый путь или сгенерировать новый, если имя файла изменилось
 	data.FilePath = inDBData.FilePath
 
-	// 2. Перезаписываем бинарные данные (cipherdata) на диске
+	// Перезаписываем бинарные данные (cipherdata) на диске
 	file, err := os.OpenFile(data.FilePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
 		logger.Log.Warnln("error while opening file for editing", err)
@@ -163,7 +163,7 @@ func (gk *GoKeeperServer) EditFile(ctx context.Context, in *pb.FileData) (*pb.Em
 
 	data.CipherData = nil // Обнуляем байты перед отправкой структуры в репозиторий
 
-	// 3. Обновляем запись о файле в базе данных
+	// Обновляем запись о файле в базе данных
 	err = dbservice.EditFile(ctx, data)
 	if err != nil {
 		logger.Log.Warnln("error while updating file data in db", err)

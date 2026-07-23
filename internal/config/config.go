@@ -23,6 +23,9 @@ var configFileAddress string
 var SrvConfig ConfigSrvData
 var DBconn *sql.DB
 
+const SecretKey = "secret key"
+const KeyString = "supersecretkeywhichis32byteslong"
+
 func Init() {
 	cf := flag.String("c", "", "config file address")
 	flag.Parse()

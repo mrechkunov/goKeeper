@@ -9,10 +9,9 @@ import (
 	"io"
 	"strings"
 
+	"github.com/mrechkunov/goKeeper.git/internal/config"
 	"github.com/mrechkunov/goKeeper.git/internal/logger"
 )
-
-const keyString = "supersecretkeywhichis32byteslong"
 
 // Encrypt bytes AES with keyString
 func Encrypt(plaintext []byte, key []byte) ([]byte, error) {
@@ -68,7 +67,7 @@ func Decrypt(ciphertext []byte, key []byte) ([]byte, error) {
 // CryptoPair login password to base64 string
 func CryptoPair(login, pass string) (string, error) {
 	pair := login + "|" + pass
-	cryptopair, err := Encrypt([]byte(pair), []byte(keyString))
+	cryptopair, err := Encrypt([]byte(pair), []byte(config.KeyString))
 	if err != nil {
 		logger.Log.Errorln("encryption error:", err)
 		return "", err
@@ -84,7 +83,7 @@ func DecryptPair(in string) (string, string, error) {
 		return "", "", err
 	}
 
-	decryptpair, err := Decrypt(decodedBytes, []byte(keyString))
+	decryptpair, err := Decrypt(decodedBytes, []byte(config.KeyString))
 	if err != nil {
 		logger.Log.Errorln("decryption error:", err)
 		return "", "", err

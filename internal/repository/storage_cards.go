@@ -17,8 +17,8 @@ type StorageCards struct {
 }
 
 // создаем новый сторадж для работы с таблицей карт
-func NewCardsStorage(DBconn *sql.DB) StorageCards {
-	return StorageCards{DBconnection: DBconn}
+func NewCardsStorage(DBconn *sql.DB) *StorageCards {
+	return &StorageCards{DBconnection: DBconn}
 }
 
 // проверить есть ли данные в БД по login + metadata
