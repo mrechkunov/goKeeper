@@ -1,6 +1,7 @@
 package auth_test
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -293,4 +294,97 @@ func TestValidLuhnCardNumber(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestHashAndCheckPassword(t *testing.T) {
+	// 1. Тестируем успешный цикл хэширования и проверки
+	t.Run("Успешно: Корректный пароль и проверка сложности", func(t *testing.T) {
+		secretPassword := "my-Super-Strong-Pa$$word-2026"
+
+		// Генерируем хэш
+		hash, err := auth.HashPassword(secretPassword)
+		if err != nil {
+			t.Fatalf("HashPassword() вернул неожиданную ошибку: %v", err)
+		}
+
+		if hash == "" {
+			t.Fatal("HashPassword() вернул пустую строку")
+		}
+
+		// Проверяем, что хэш использует именно установленную сложность 14.
+		// Bcrypt-хэш имеет формат: $2a$[cost]$[salt+hash]. Ищем "$2a$14$" или "$2b$14$"
+		if !strings.Contains(hash, "$14$") {
+			t.Errorf("Хэш %q не содержит маркер сложности 14. Проверьте параметр cost в функции.", hash)
+		}
+
+		// Проверяем валидный пароль
+		if !auth.CheckPasswordHash(secretPassword, hash) {
+			t.Error("CheckPasswordHash() вернул false для корректного пароля")
+		}
+	})
+
+	// 2. Тестируем негативные сценарии валидации
+	t.Run("Негативные кейсы валидации", func(t *testing.T) {
+		password := "correct_password"
+		hash, _ := auth.HashPassword(password)
+
+		tests := []struct {
+			name     string
+			password string
+			hash     string
+			want     bool
+		}{
+			{
+				name:     "Неверный пароль",
+				password: "wrong_password",
+				hash:     hash,
+				want:     false,
+			},
+			{
+				name:     "Пустой пароль",
+				password: "",
+				hash:     hash,
+				want:     false,
+			},
+			{
+				name:     "Сломанная строка хэша",
+				password: password,
+				hash:     "not-a-valid-bcrypt-hash",
+				want:     false,
+			},
+			{
+				name:     "Пустой хэш",
+				password: password,
+				hash:     "",
+				want:     false,
+			},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				got := auth.CheckPasswordHash(tt.password, tt.hash)
+				if got != tt.want {
+					t.Errorf("CheckPasswordHash() [%s] = %v, want %v", tt.name, got, tt.want)
+				}
+			})
+		}
+	})
+
+	// 3. Тестируем ограничение по длине в bcrypt
+	t.Run("Ограничение длины пароля в Bcrypt", func(t *testing.T) {
+		// Важное свойство bcrypt: он учитывает только первые 72 байта пароля.
+		// Всё, что длиннее 72 символов, игнорируется. Проверим это поведение.
+		basePassword := strings.Repeat("A", 72)
+		longPassword := basePassword + "extra_characters_that_should_be_ignored"
+
+		hash, err := auth.HashPassword(basePassword)
+		if err != nil {
+			t.Fatalf("Не удалось захэшировать базовый длинный пароль: %v", err)
+		}
+
+		// Пароли длиннее 72 символов будут считаться валидными, так как bcrypt их обрежет
+		if !auth.CheckPasswordHash(longPassword, hash) {
+			t.Error("Bcrypt должен был пропустить длинный пароль из-за лимита в 72 байта")
+		}
+	})
 }
