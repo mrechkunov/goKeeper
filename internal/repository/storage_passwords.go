@@ -63,7 +63,7 @@ func (sp *StoragePasswords) SelectPassword(ctx context.Context, login string, me
 		if errors.Is(err, sql.ErrNoRows) {
 			logger.Log.Infoln("passwords is not exist in DB")
 		} else {
-			logger.Log.Errorln("error while scanning row from DB", err)
+			logger.Log.Infoln("error while scanning row from DB", err)
 		}
 		return resp, err
 	}
@@ -111,7 +111,6 @@ func (sp *StoragePasswords) DeletePassword(ctx context.Context, data model.Passw
 
 	result, err := sp.DBconnection.ExecContext(ctxWithTimeout, sqlStatement, data.UserLogin, data.MetaData)
 	if err != nil {
-		logger.Log.Errorln("error while deleting password from DB", err)
 		return err
 	}
 

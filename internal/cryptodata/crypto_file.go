@@ -7,7 +7,7 @@ import (
 // CryptoFile file bytes crypt with key
 func CryptoFile(data []byte) (cryptodata []byte, err error) {
 
-	cryptodata, err = Encrypt([]byte(data), []byte(keyString))
+	cryptodata, err = Encrypt(data, []byte(keyString))
 	if err != nil {
 		logger.Log.Errorln(err)
 		return cryptodata, err

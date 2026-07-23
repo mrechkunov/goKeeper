@@ -37,7 +37,7 @@ func Encrypt(plaintext []byte, key []byte) ([]byte, error) {
 	return ciphertext, nil
 }
 
-// Decrypt bytes AES with keyString
+// Decrypt bytes AES-GCM with key
 func Decrypt(ciphertext []byte, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -60,35 +60,43 @@ func Decrypt(ciphertext []byte, key []byte) ([]byte, error) {
 
 	plaintext, err := aesGCM.Open(nil, nonce, ciphertextBytes, nil)
 	if err != nil {
-		return nil, err
+		return nil, err // Возвращает ошибку, если ключ не совпал (cipher: message authentication failed)
 	}
 	return plaintext, nil
 }
 
 // CryptoPair login password to base64 string
-func CryptoPair(login, pass string) (out string, err error) {
+func CryptoPair(login, pass string) (string, error) {
 	pair := login + "|" + pass
 	cryptopair, err := Encrypt([]byte(pair), []byte(keyString))
 	if err != nil {
-		logger.Log.Errorln(err)
-		return
+		logger.Log.Errorln("encryption error:", err)
+		return "", err
 	}
 	return base64.StdEncoding.EncodeToString(cryptopair), nil
 }
 
 // DecryptPair login password from base64 string
-func DecryptPair(in string) (login, pass string, err error) {
+func DecryptPair(in string) (string, string, error) {
 	decodedBytes, err := base64.StdEncoding.DecodeString(in)
 	if err != nil {
 		logger.Log.Warnln("decoding error:", err)
-		return
+		return "", "", err
 	}
+
 	decryptpair, err := Decrypt(decodedBytes, []byte(keyString))
 	if err != nil {
-		logger.Log.Errorln(err)
-		return
+		logger.Log.Errorln("decryption error:", err)
+		return "", "", err
 	}
+
 	decryptpairstring := string(decryptpair)
 	res := strings.SplitN(decryptpairstring, "|", 2)
+
+	// Защита от криптографического мусора (неверного ключа)
+	if len(res) != 2 {
+		return "", "", fmt.Errorf("invalid decrypted pair format")
+	}
+
 	return res[0], res[1], nil
 }

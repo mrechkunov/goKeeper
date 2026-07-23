@@ -3,6 +3,7 @@ package cryptodata
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/mrechkunov/goKeeper.git/internal/auth"
@@ -24,18 +25,28 @@ func CryptoCard(number, valid, cvv string) (out string, err error) {
 }
 
 // DecryptCard decrypt card data from base64 to string
-func DecryptCard(in string) (number, valid, cvv string, err error) {
+func DecryptCard(in string) (string, string, string, error) {
 	decodedBytes, err := base64.StdEncoding.DecodeString(in)
 	if err != nil {
 		logger.Log.Warnln("decoding error:", err)
-		return
+		return "", "", "", err
 	}
+
+	// Передаем глобальный ключ keyString
 	decryptdata, err := Decrypt(decodedBytes, []byte(keyString))
 	if err != nil {
-		logger.Log.Errorln(err)
-		return
+		logger.Log.Errorln("decryption error:", err)
+		return "", "", "", err // Явно возвращаем ошибку криптографии
 	}
+
 	decryptdatastring := string(decryptdata)
 	res := strings.SplitN(decryptdatastring, "|", 3)
-	return res[0], res[1], res[3], nil
+
+	// Защита от некорректно расшифрованного формата данных
+	if len(res) != 3 {
+		return "", "", "", fmt.Errorf("invalid decrypted data format")
+	}
+
+	// Безопасный возврат индексов без паники out of bounds
+	return res[0], res[1], res[2], nil
 }

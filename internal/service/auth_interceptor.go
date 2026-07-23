@@ -43,7 +43,7 @@ func AuthInterceptor(
 		return nil, status.Error(codes.Unauthenticated, "no token in metadata")
 	}
 	authHeader := values[0]
-	token, err := extractToken(authHeader)
+	token, err := ExtractToken(authHeader)
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, err.Error())
 	}
@@ -64,11 +64,11 @@ func AuthInterceptor(
 }
 
 // extractToken парсит заголовок Bearer Token
-func extractToken(header string) (string, error) {
-	parts := strings.Split(header, " ")
+func ExtractToken(header string) (string, error) {
+	parts := strings.Fields(header)
 	if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
-		fmt.Println(header)
 		return "", fmt.Errorf("неверный формат заголовка авторизации")
 	}
+
 	return parts[1], nil
 }
