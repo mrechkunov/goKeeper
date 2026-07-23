@@ -13,7 +13,7 @@ import (
 )
 
 // Add user in DB if login is not exist
-func AddUser(ctx context.Context, user model.Users) error {
+var AddUser = func(ctx context.Context, user model.Users) error {
 	usersStorage := repository.NewUsersStorage(config.DBconn)
 	exist, err := usersStorage.IsExist(ctx, user.Login)
 	if err != nil || exist {
@@ -26,7 +26,7 @@ func AddUser(ctx context.Context, user model.Users) error {
 }
 
 // GetUser return user by login
-func GetUser(ctx context.Context, login string) (user model.Users, err error) {
+var GetUser = func(ctx context.Context, login string) (user model.Users, err error) {
 	usersStorage := repository.NewUsersStorage(config.DBconn)
 	user, err = usersStorage.SelectUser(ctx, login)
 	if err != nil {
@@ -36,13 +36,13 @@ func GetUser(ctx context.Context, login string) (user model.Users, err error) {
 }
 
 // EditUser change password for autorizated user
-func EditUser(ctx context.Context, user model.Users) (err error) {
+var EditUser = func(ctx context.Context, user model.Users) (err error) {
 	usersStorage := repository.NewUsersStorage(config.DBconn)
 	return usersStorage.UpdateUser(ctx, user)
 }
 
 // DeleteUser delete user and all data in storages
-func DeleteUser(ctx context.Context, user model.Users) (err error) {
+var DeleteUser = func(ctx context.Context, user model.Users) (err error) {
 	var wg sync.WaitGroup
 	wg.Add(3)
 	// удалим все данные пользователя ранее созданные пароли
