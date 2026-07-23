@@ -19,6 +19,7 @@ func main() {
 	config.Init()
 	logger.Log.Infoln("Reading config")
 	defer logger.Log.Sync() // закрываем логгер при выходе из main
+
 	// Создаем контекст для получения системных сигналов
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	defer stop()
@@ -35,7 +36,7 @@ func main() {
 		logger.Log.Warnln("Error while open TLS cert: ", err)
 	}
 	// Создаем gRPC сервер без зарегистрированной службы
-	s := grpc.NewServer(grpc.Creds(creds))
+	s := grpc.NewServer(grpc.Creds(creds), grpc.UnaryInterceptor(service.AuthInterceptor))
 	// Регистрируем сервис
 	pb.RegisterGoKeeperServer(s, &service.GoKeeperServer{})
 	logger.Log.Infoln("gRPC server starting")
@@ -50,5 +51,5 @@ func main() {
 	<-ctx.Done()
 	logger.Log.Infoln("Получен сигнал завершения. Начинаем graceful shutdown...")
 	s.GracefulStop()
-
+	config.DBconn.Close()
 }

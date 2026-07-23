@@ -2,8 +2,7 @@
 -- Создание таблицы пользователей
 CREATE TABLE IF NOT EXISTS users (
     u_login VARCHAR(255) PRIMARY KEY,
-    u_password VARCHAR(255) NOT NULL,
-    u_token VARCHAR(255) NOT NULL
+    u_password VARCHAR(255) NOT NULL
 );
 
 -- Базовый индекс для поиска по login

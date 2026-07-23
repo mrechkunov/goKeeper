@@ -1,7 +1,9 @@
 package model
 
 type Passwords struct {
-	Token    string `json:"token"`
-	Pair     string `json:"pair"`
-	Metadata string `json:"metadata"`
+	UserLogin      string
+	Pair           string
+	MetaData       string
+	LoginToSave    string
+	PasswordToSave string
 }
