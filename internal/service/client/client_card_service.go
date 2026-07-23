@@ -13,7 +13,8 @@ import (
 func SaveCard(ctx context.Context, client pb.GoKeeperClient, data model.Cards) (err error) {
 	data.CipherData, err = cryptodata.CryptoCard(data.CardNumber, data.ValidTo, data.CVVCode)
 	if err != nil {
-		logger.Log.Infoln(err)
+		logger.Log.Errorln("failed to encrypt card data:", err)
+		return err
 	}
 	dataPb := pb.CardData_builder{
 		Login:      &data.UserLogin,
@@ -56,7 +57,8 @@ func GetCard(ctx context.Context, client pb.GoKeeperClient, card model.Cards) (o
 func EditCard(ctx context.Context, client pb.GoKeeperClient, card model.Cards) (err error) {
 	card.CipherData, err = cryptodata.CryptoCard(card.CardNumber, card.ValidTo, card.CVVCode)
 	if err != nil {
-		logger.Log.Infoln(err)
+		logger.Log.Errorln("failed to encrypt card data during edit:", err)
+		return err
 	}
 	cardPb := pb.CardData_builder{
 		Login:      &card.UserLogin,

@@ -2,8 +2,6 @@ package service_test
 
 import (
 	"context"
-	"errors"
-	"strings"
 	"testing"
 
 	"github.com/mrechkunov/goKeeper.git/internal/service"
@@ -13,21 +11,11 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// Ключ контекста
+// Определяем собственный тип для ключа, чтобы избежать конфликтов
 type contextKey string
 
+// Создаем константу ключа
 const userLoginKey contextKey = "userLogin"
-
-// Фейковая функция извлечения токена, если она объявлена в том же пакете.
-func extractToken(authHeader string) (string, error) {
-	if authHeader == "" {
-		return "", errors.New("empty header")
-	}
-	if strings.HasPrefix(authHeader, "Bearer ") {
-		return strings.TrimPrefix(authHeader, "Bearer "), nil
-	}
-	return authHeader, nil
-}
 
 func TestAuthInterceptor(t *testing.T) {
 	tests := []struct {

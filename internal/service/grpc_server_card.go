@@ -12,59 +12,66 @@ import (
 )
 
 // SaveCard save card data in storage
-func (gk *GoKeeperServer) SaveCard(ctx context.Context, in *pb.CardData) (out *pb.EmptyMessage, err error) {
+func (gk *GoKeeperServer) SaveCard(ctx context.Context, in *pb.CardData) (*pb.EmptyMessage, error) {
 	data := model.Cards{
 		UserLogin:  in.GetLogin(),
 		CipherData: in.GetCipherdata(),
 		MetaData:   in.GetMetadata(),
 	}
-	if err = dbservice.AddCard(ctx, data); err != nil {
+
+	if err := dbservice.AddCard(ctx, data); err != nil {
 		logger.Log.Warnln("Error while save card in db", err)
-		return out, status.Error(codes.AlreadyExists, "server error card not saved")
+		return nil, status.Error(codes.AlreadyExists, "server error card not saved")
 	}
-	return out, nil
+
+	return &pb.EmptyMessage{}, nil
 }
 
 // GetCard return card data from storage
-func (gk *GoKeeperServer) GetCard(ctx context.Context, in *pb.CardData) (out *pb.CardData, err error) {
+func (gk *GoKeeperServer) GetCard(ctx context.Context, in *pb.CardData) (*pb.CardData, error) {
 	data, err := dbservice.GetCard(ctx, in.GetLogin(), in.GetMetadata())
 	if err != nil {
 		logger.Log.Warnln("error while get card data", err)
+		return nil, err
 	}
-	out = pb.CardData_builder{
+
+	out := pb.CardData_builder{
 		Login:      &data.UserLogin,
 		Cipherdata: &data.CipherData,
 		Metadata:   &data.MetaData,
 	}.Build()
+
 	return out, nil
 }
 
 // EditCard edit card data in storage
-func (gk *GoKeeperServer) EditCard(ctx context.Context, in *pb.CardData) (out *pb.EmptyMessage, err error) {
+func (gk *GoKeeperServer) EditCard(ctx context.Context, in *pb.CardData) (*pb.EmptyMessage, error) {
 	data := model.Cards{
 		UserLogin:  in.GetLogin(),
 		CipherData: in.GetCipherdata(),
 		MetaData:   in.GetMetadata(),
 	}
-	err = dbservice.EditCard(ctx, data)
-	if err != nil {
+
+	if err := dbservice.EditCard(ctx, data); err != nil {
 		logger.Log.Warnln("error while edit card data", err)
-		return out, err
+		return nil, err
 	}
-	return out, nil
+
+	return &pb.EmptyMessage{}, nil
 }
 
 // DeleteCard delete card data from storage
-func (gk *GoKeeperServer) DeleteCard(ctx context.Context, in *pb.CardData) (out *pb.EmptyMessage, err error) {
+func (gk *GoKeeperServer) DeleteCard(ctx context.Context, in *pb.CardData) (*pb.EmptyMessage, error) {
 	data := model.Cards{
 		UserLogin:  in.GetLogin(),
 		CipherData: in.GetCipherdata(),
 		MetaData:   in.GetMetadata(),
 	}
-	err = dbservice.DeleteCard(ctx, data)
-	if err != nil {
+
+	if err := dbservice.DeleteCard(ctx, data); err != nil {
 		logger.Log.Warnln("error while delete card", err)
-		return out, err
+		return nil, err
 	}
-	return out, nil
+
+	return &pb.EmptyMessage{}, nil
 }

@@ -13,7 +13,8 @@ import (
 func SavePass(ctx context.Context, client pb.GoKeeperClient, pass model.Passwords) (err error) {
 	pass.Pair, err = cryptodata.CryptoPair(pass.LoginToSave, pass.PasswordToSave)
 	if err != nil {
-		logger.Log.Infoln(err)
+		logger.Log.Errorln("failed to encrypt password pair:", err)
+		return err
 	}
 	passPb := pb.PasswordData_builder{
 		Login:    &pass.UserLogin,
@@ -48,14 +49,15 @@ func GetPass(ctx context.Context, client pb.GoKeeperClient, pass model.Passwords
 		LoginToSave:    getLogin,
 		PasswordToSave: getPass,
 	}
-	return out, err
+	return out, nil
 }
 
-// Edit Pass edit password pair in DB
+// EditPass edit password pair in DB
 func EditPass(ctx context.Context, client pb.GoKeeperClient, pass model.Passwords) (err error) {
 	pass.Pair, err = cryptodata.CryptoPair(pass.LoginToSave, pass.PasswordToSave)
 	if err != nil {
-		logger.Log.Infoln(err)
+		logger.Log.Errorln("failed to encrypt password pair during edit:", err)
+		return err
 	}
 	passPb := pb.PasswordData_builder{
 		Login:    &pass.UserLogin,

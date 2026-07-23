@@ -93,20 +93,24 @@ func (gk *GoKeeperServer) EditUser(ctx context.Context, in *pb.User) (*pb.User, 
 	if err != nil {
 		return nil, err
 	}
-	// Безопасное извлечение логина из контекста
-	loginVal := ctx.Value(userLoginKey)
+
+	// Используем новый глобальный ключ для извлечения логина
+	loginVal := ctx.Value(UserLoginKey)
 	loginStr, ok := loginVal.(string)
 	if !ok || loginStr == "" {
 		return nil, status.Error(codes.Unauthenticated, "user login not found in context")
 	}
+
 	user := model.Users{
 		Login:        loginStr,
 		PasswordHash: pass,
 	}
+
 	err = dbservice.EditUser(ctx, user)
 	if err != nil {
 		return nil, err
 	}
+
 	out := pb.User_builder{
 		Login:        &user.Login,
 		PasswordHash: &user.PasswordHash,

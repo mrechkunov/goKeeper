@@ -38,12 +38,12 @@ func AuthenticateUser(ctx context.Context, client pb.GoKeeperClient, user model.
 	_, err = client.AuthenticateUser(ctx, userPb, grpc.Header(&header))
 	if err != nil {
 		logger.Log.Errorln("error while Authenticate user: ", err)
-		return token, err
+		return "", err
 	}
 	if vals := header.Get("authorization"); len(vals) > 0 {
 		token = vals[0]
 	}
-	return token, err
+	return token, nil
 }
 
 // ChangePass client service for change pass to authentificated user

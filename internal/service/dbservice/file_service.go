@@ -11,31 +11,31 @@ import (
 )
 
 // AddFile insert data in storage
-func AddFile(ctx context.Context, data model.File) error {
+var AddFile = func(ctx context.Context, data model.File) error {
 	fileStorage := repository.NewFileStorage(config.DBconn)
 	return fileStorage.InsertFile(ctx, data)
 }
 
 // GetFile return data from storage selected by login & metadata
-func GetFile(ctx context.Context, login, metadata string) (data model.File, err error) {
+var GetFile = func(ctx context.Context, login, metadata string) (data model.File, err error) {
 	fileStorage := repository.NewFileStorage(config.DBconn)
 	return fileStorage.SelectFile(ctx, login, metadata)
 }
 
 // EditFile Edit file data in DB
-func EditFile(ctx context.Context, dataIn model.File) error {
+var EditFile = func(ctx context.Context, dataIn model.File) error {
 	fileStorage := repository.NewFileStorage(config.DBconn)
 	return fileStorage.UpdateFile(ctx, dataIn)
 }
 
 // DeleteFile delete row with file data by login and metadata
-func DeleteFile(ctx context.Context, data model.File) error {
+var DeleteFile = func(ctx context.Context, data model.File) error {
 	fileStorage := repository.NewFileStorage(config.DBconn)
 	return fileStorage.DeleteFile(ctx, data)
 }
 
 // DeleteAllUserFiles delete all records by login
-func DeleteAllUserFiles(ctx context.Context, login string) error {
+var DeleteAllUserFiles = func(ctx context.Context, login string) error {
 	fileStorage := repository.NewFileStorage(config.DBconn)
 	pathList, err := fileStorage.DeleteAllFilesByLogin(ctx, login)
 	if err != nil {

@@ -13,27 +13,36 @@ import (
 )
 
 // SaveFile client service for encrypt and save file data on server
-func SaveFile(ctx context.Context, client pb.GoKeeperClient, file model.File) (err error) {
-	//узнать размер файла, если он больше чем 4 мб отказать
+func SaveFile(ctx context.Context, client pb.GoKeeperClient, file model.File) error {
+	// узнать размер файла, если он больше чем 4 мб отказать
 	fileInfo, err := os.Stat(file.FilePath)
 	if err != nil {
 		logger.Log.Infoln("error while file info get in os Stat:", err)
-		return
+		return err
 	}
+
 	if fileInfo.Size() > 4000000 {
 		err = errors.New("to big file to save")
 		logger.Log.Infoln(err)
 		return err
 	}
+
 	file.FileName = filepath.Base(file.FilePath)
-	//прочитать файл в байты
+
+	// прочитать файл в байты
 	data, err := os.ReadFile(file.FilePath)
 	if err != nil {
 		logger.Log.Warnln("error while reading file", err)
 		return err
 	}
-	//зашифровать байты
+
+	// зашифровать байты
 	file.CipherData, err = cryptodata.CryptoFile(data)
+	if err != nil {
+		logger.Log.Warnln("error while encrypting file", err)
+		return err
+	}
+
 	// передать на сервер данные
 	dataPb := pb.FileData_builder{
 		Filename:   &file.FileName,
@@ -41,6 +50,7 @@ func SaveFile(ctx context.Context, client pb.GoKeeperClient, file model.File) (e
 		Cipherdata: file.CipherData,
 		Login:      &file.UserLogin,
 	}.Build()
+
 	_, err = client.SaveFile(ctx, dataPb)
 	if err != nil {
 		logger.Log.Warnln("error while save file", err)
@@ -61,16 +71,21 @@ func GetFile(ctx context.Context, client pb.GoKeeperClient, file model.File) (ou
 		return out, err
 	}
 	// создать папку для пользователя если ее нет
-	dirPath := "./download/" + data.GetLogin()
-	err = os.MkdirAll(dirPath, 0755) // 0755 — права доступа для владельца, группы и остальных
+	dirPath := filepath.Join(".", "download", data.GetLogin())
+	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {
 		logger.Log.Warnln("error while make dir on client size", err)
 		return out, err
 	}
+
 	decryptData, err := cryptodata.DecryptFile(data.GetCipherdata())
+	if err != nil {
+		logger.Log.Warnln("error while decrypting file on client size", err)
+		return out, err
+	}
 
 	// открываем (создаем, если нет) файл с правами чтения/записи
-	filePath := dirPath + "/" + data.GetFilename()
+	filePath := filepath.Join(dirPath, data.GetFilename())
 	fileToWrite, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
 		logger.Log.Warnln("error while open file on client size", err)
@@ -91,6 +106,52 @@ func GetFile(ctx context.Context, client pb.GoKeeperClient, file model.File) (ou
 		UserLogin: data.GetLogin(),
 	}
 	return out, nil
+}
+
+// EditFile client service for encrypt and update file data on server
+func EditFile(ctx context.Context, client pb.GoKeeperClient, file model.File) error {
+	// Узнаем размер измененного файла, если он больше 4 МБ — отказываем
+	fileInfo, err := os.Stat(file.FilePath)
+	if err != nil {
+		logger.Log.Infoln("error while file info get in os Stat during edit:", err)
+		return err
+	}
+	if fileInfo.Size() > 4000000 {
+		err = errors.New("to big file to save")
+		logger.Log.Infoln(err)
+		return err
+	}
+
+	file.FileName = filepath.Base(file.FilePath)
+
+	// Прочитываем обновленный файл в байты
+	data, err := os.ReadFile(file.FilePath)
+	if err != nil {
+		logger.Log.Warnln("error while reading file during edit", err)
+		return err
+	}
+
+	// Зашифровываем новые байты файла
+	file.CipherData, err = cryptodata.CryptoFile(data)
+	if err != nil {
+		logger.Log.Warnln("error while encrypting file during edit", err)
+		return err
+	}
+
+	// Подготавливаем и передаем на сервер обновленные данные
+	dataPb := pb.FileData_builder{
+		Filename:   &file.FileName,
+		Metadata:   &file.MetaData,
+		Cipherdata: file.CipherData,
+		Login:      &file.UserLogin,
+	}.Build()
+
+	_, err = client.EditFile(ctx, dataPb)
+	if err != nil {
+		logger.Log.Warnln("error while edit file on server", err)
+		return err
+	}
+	return nil
 }
 
 // DeleteCard delete card data from server

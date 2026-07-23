@@ -13,10 +13,10 @@ import (
 )
 
 // Определяем собственный тип для ключа, чтобы избежать конфликтов
-type contextKey string
+type ContextKey string
 
 // Создаем константу ключа
-const userLoginKey contextKey = "userLogin"
+const UserLoginKey ContextKey = "userLogin"
 
 // AuthInterceptor извлекает токен и проверяет его валидность.
 func AuthInterceptor(
@@ -58,7 +58,7 @@ func AuthInterceptor(
 		return nil, status.Error(codes.Unauthenticated, "no login in token")
 	}
 	//записываем в контекст логин пользователя
-	ctxWithLogin := context.WithValue(ctx, userLoginKey, login)
+	ctxWithLogin := context.WithValue(ctx, UserLoginKey, login)
 	// Если всё успешно, передаем управление дальше по цепочке
 	return handler(ctxWithLogin, req)
 }
