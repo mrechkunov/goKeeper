@@ -67,7 +67,18 @@ func GetLoginByToken(tokenString string) (login string, err error) {
 
 	// Извлекаем claims и получаем логин
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		login = claims["username"].(string)
+		// Безопасное приведение интерфейса к строке
+		usernameInterface, exists := claims["username"]
+		if !exists {
+			return "", errors.New("username claim is missing")
+		}
+
+		usernameStr, ok := usernameInterface.(string)
+		if !ok {
+			return "", errors.New("username claim is not a string")
+		}
+
+		login = usernameStr
 	} else {
 		err = errors.New("Error while claims get: token is expired")
 	}
